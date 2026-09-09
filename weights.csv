@@ -1,0 +1,7 @@
+run,config,mass_before_g,mass_after_g,wax_type,burn_notes
+25082026_Candle_R1,1,11.25,2.96,paraffin,"~3.8h long-protocol run; HRR drift from dirty filter (changed next day) -> HRR INVALID, use mass-loss only; burned near-complete"
+26082026_Candle_R2,1,11.22,9.86,paraffin,"NOT a blank - it burned (lost 1.36 g); no ignition/flameout logged in metadata; short/incomplete; derive window from load-cell shape"
+26082026_Candle_R3,1,11.61,9.99,paraffin,"single-candle ANCHOR; did NOT reach full steady state (only 1.62 g lost); mean HRR may slightly over-read steady value"
+26082026_3_Candles_R1,3,34.19,30.66,paraffin,"3 candles CONFIRMED by mass (11.61+11.53+11.05=34.19 g) - filename correct; internal metadata logged only candle 1"
+27082026_3_Candles_R2,3,34.13,33.03,paraffin,"3 candles (11.11+11.44+11.58); short burn ~844 s (flameout 856 s)"
+27082026_3_Candles_R3,3,34.20,,paraffin,"3 candles (11.29+11.13+11.78); after-mass NOT recorded -> no Route C HRR; timeline only (ignition 32 s, flameout 1757 s)"

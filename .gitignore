@@ -1,0 +1,36 @@
+# macOS / Python
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# duplicate raw exports (originals kept without the " copy" suffix)
+*copy.csv.txt
+
+# FDS run outputs -- keep the CSVs, logs and decks; drop the large binaries
+# (Smokeview slices/plots are regenerable from the decks)
+fds/runs/**/*.s3d
+fds/runs/**/*.s3d.sz
+fds/runs/**/*.sf
+fds/runs/**/*.sf.bnd
+fds/runs/**/*.bf
+fds/runs/**/*.bf.bnd
+fds/runs/**/*.smv
+fds/runs/**/*.q
+fds/runs/**/*.iso
+fds/runs/**/*.prt5
+fds/runs/**/*.restart
+fds/cluster_package.tgz
+
+# extracted video frames -- derived from footage not stored here; keep only the
+# summary montages + one setup still
+media/frames/*
+!media/frames/dev_montage_3276.jpg
+!media/frames/dev_montage_3278.jpg
+!media/frames/_contact_sheet.jpg
+!media/frames/still_3269.jpg
+
+# scratch
+scratchpad/
+*.tmp
