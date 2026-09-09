@@ -1,0 +1,545 @@
+{
+  "runs": [
+    {
+      "run": "R1",
+      "name": "2026-08-27_exponat_R1",
+      "loader_notes": [
+        "864 raw data rows -> 863 after coalescing 1 split-write pair(s); 1 row(s) out of experiment window (exp_time == -1).",
+        "exp_time spans 0-882 s over 862 samples; step median 1.00 s, mean 1.024 s, 21 skipped-second gap(s)."
+      ],
+      "n_split_writes": 1,
+      "n_out_of_window": 1,
+      "event_transitions": [
+        {
+          "from": 0,
+          "to": 1,
+          "exp_time_s": 213.0,
+          "wall_time_s": 213.2
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "exp_time_s": 303.0,
+          "wall_time_s": 303.3
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "exp_time_s": 334.0,
+          "wall_time_s": 334.0
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "exp_time_s": 489.0,
+          "wall_time_s": 488.8
+        }
+      ],
+      "t_ignition_s": 336.0,
+      "per_sensor": {
+        "TC_01": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.05,
+          "baseline_C": 25.2,
+          "peak_C": 136.6,
+          "peak_rise_C": 111.4,
+          "time_to_peak_from_ign_s": 463.0,
+          "mean_rise_post_ign_C": 83.3,
+          "t_over_60C_from_ign_s": 37.0,
+          "t_over_100C_from_ign_s": 142.0
+        },
+        "TC_02": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.16,
+          "baseline_C": 24.9,
+          "peak_C": 51.4,
+          "peak_rise_C": 26.5,
+          "time_to_peak_from_ign_s": 400.0,
+          "mean_rise_post_ign_C": 9.9,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_03": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.23,
+          "baseline_C": 25.05,
+          "peak_C": 64.0,
+          "peak_rise_C": 38.9,
+          "time_to_peak_from_ign_s": 304.0,
+          "mean_rise_post_ign_C": 30.2,
+          "t_over_60C_from_ign_s": 212.0,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_05": {
+          "group": "ceiling centre",
+          "x_m": 0.35,
+          "z_m": 0.23,
+          "baseline_C": 25.1,
+          "peak_C": 29.3,
+          "peak_rise_C": 4.2,
+          "time_to_peak_from_ign_s": 533.0,
+          "mean_rise_post_ign_C": 2.2,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_09": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.015,
+          "baseline_C": 25.0,
+          "peak_C": 25.2,
+          "peak_rise_C": 0.2,
+          "time_to_peak_from_ign_s": 388.0,
+          "mean_rise_post_ign_C": 0.1,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_10": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.075,
+          "baseline_C": 24.9,
+          "peak_C": 25.8,
+          "peak_rise_C": 0.9,
+          "time_to_peak_from_ign_s": 500.0,
+          "mean_rise_post_ign_C": 0.4,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_11": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.14,
+          "baseline_C": 25.2,
+          "peak_C": 29.7,
+          "peak_rise_C": 4.5,
+          "time_to_peak_from_ign_s": 449.0,
+          "mean_rise_post_ign_C": 2.8,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        }
+      },
+      "structure": {
+        "back_wall_column_peak_C": {
+          "TC_01": 136.6,
+          "TC_02": 51.4,
+          "TC_03": 64.0
+        },
+        "column_is_non_monotonic_in_height": true,
+        "upper_layer_dT_T3_minus_T2_peak_C": 32.8,
+        "upper_layer_dT_T3_minus_T2_mean_post_ign_C": 20.4,
+        "stratification_onset_from_ign_s": 30.0,
+        "doorway_orders_by_height": true,
+        "doorway_dT_T11_minus_T9_peak_C": 4.6,
+        "ceiling_horizontal_dT_T3_minus_T5_peak_C": 36.4,
+        "ceiling_horizontal_dT_T3_minus_T5_mean_post_ign_C": 27.9,
+        "hot_layer_localized_over_fire": true
+      },
+      "characteristic_times": {
+        "record_start_exp_time_s": 0.0,
+        "record_end_exp_time_s": 882.0,
+        "thermal_onset_exp_time_s": 336.0,
+        "nearest_event_transition": "2->3 @ 334s",
+        "onset_minus_nearest_event_s": 2.0,
+        "t_ignition_used_s": 336.0,
+        "post_ignition_record_s": 546.0,
+        "time_to_stratification_from_ign_s": 30.0,
+        "time_to_plume_peak_from_ign_s": 463.0,
+        "quasi_steady_window_from_ign_s": null,
+        "quasi_steady_TC01_mean_C": null,
+        "quasi_steady_TC01_std_C": null,
+        "broad_peak_TC01_mean_C": 126.6,
+        "broad_peak_TC01_std_C": 5.65,
+        "post_peak_cooling_rate_C_per_min": 4.37
+      },
+      "pre_ignition_noise_std_C": {
+        "TC_01": 0.197,
+        "TC_02": 0.104,
+        "TC_03": 0.107,
+        "TC_05": 0.036,
+        "TC_09": 0.048,
+        "TC_10": 0.057,
+        "TC_11": 0.047
+      }
+    },
+    {
+      "run": "R2",
+      "name": "2026-08-27_exponat_R2",
+      "loader_notes": [
+        "806 raw data rows -> 802 after coalescing 4 split-write pair(s); 1 row(s) out of experiment window (exp_time == -1).",
+        "exp_time spans 0-820 s over 801 samples; step median 1.00 s, mean 1.025 s, 20 skipped-second gap(s)."
+      ],
+      "n_split_writes": 4,
+      "n_out_of_window": 1,
+      "event_transitions": [
+        {
+          "from": 0,
+          "to": 1,
+          "exp_time_s": 24.0,
+          "wall_time_s": 24.6
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "exp_time_s": 73.0,
+          "wall_time_s": 73.8
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "exp_time_s": 371.0,
+          "wall_time_s": 371.0
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "exp_time_s": 772.0,
+          "wall_time_s": 771.9
+        }
+      ],
+      "t_ignition_s": 74.0,
+      "per_sensor": {
+        "TC_01": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.05,
+          "baseline_C": 26.6,
+          "peak_C": 136.8,
+          "peak_rise_C": 110.2,
+          "time_to_peak_from_ign_s": 416.0,
+          "mean_rise_post_ign_C": 82.4,
+          "t_over_60C_from_ign_s": 36.0,
+          "t_over_100C_from_ign_s": 121.0
+        },
+        "TC_02": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.16,
+          "baseline_C": 25.6,
+          "peak_C": 57.3,
+          "peak_rise_C": 31.7,
+          "time_to_peak_from_ign_s": 612.0,
+          "mean_rise_post_ign_C": 15.7,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_03": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.23,
+          "baseline_C": 26.9,
+          "peak_C": 73.5,
+          "peak_rise_C": 46.6,
+          "time_to_peak_from_ign_s": 436.0,
+          "mean_rise_post_ign_C": 32.9,
+          "t_over_60C_from_ign_s": 114.0,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_05": {
+          "group": "ceiling centre",
+          "x_m": 0.35,
+          "z_m": 0.23,
+          "baseline_C": 25.9,
+          "peak_C": 30.9,
+          "peak_rise_C": 5.0,
+          "time_to_peak_from_ign_s": 438.0,
+          "mean_rise_post_ign_C": 3.2,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_09": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.015,
+          "baseline_C": 25.45,
+          "peak_C": 25.6,
+          "peak_rise_C": 0.2,
+          "time_to_peak_from_ign_s": 490.0,
+          "mean_rise_post_ign_C": 0.1,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_10": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.075,
+          "baseline_C": 25.4,
+          "peak_C": 26.6,
+          "peak_rise_C": 1.2,
+          "time_to_peak_from_ign_s": 710.0,
+          "mean_rise_post_ign_C": 0.4,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_11": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.14,
+          "baseline_C": 25.85,
+          "peak_C": 30.7,
+          "peak_rise_C": 4.9,
+          "time_to_peak_from_ign_s": 541.0,
+          "mean_rise_post_ign_C": 3.6,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        }
+      },
+      "structure": {
+        "back_wall_column_peak_C": {
+          "TC_01": 136.8,
+          "TC_02": 57.3,
+          "TC_03": 73.5
+        },
+        "column_is_non_monotonic_in_height": true,
+        "upper_layer_dT_T3_minus_T2_peak_C": 30.3,
+        "upper_layer_dT_T3_minus_T2_mean_post_ign_C": 18.5,
+        "stratification_onset_from_ign_s": 1.0,
+        "doorway_orders_by_height": true,
+        "doorway_dT_T11_minus_T9_peak_C": 5.1,
+        "ceiling_horizontal_dT_T3_minus_T5_peak_C": 43.0,
+        "ceiling_horizontal_dT_T3_minus_T5_mean_post_ign_C": 30.7,
+        "hot_layer_localized_over_fire": true
+      },
+      "characteristic_times": {
+        "record_start_exp_time_s": 0.0,
+        "record_end_exp_time_s": 820.0,
+        "thermal_onset_exp_time_s": 74.0,
+        "nearest_event_transition": "1->2 @ 73s",
+        "onset_minus_nearest_event_s": 1.0,
+        "t_ignition_used_s": 74.0,
+        "post_ignition_record_s": 746.0,
+        "time_to_stratification_from_ign_s": 1.0,
+        "time_to_plume_peak_from_ign_s": 416.0,
+        "quasi_steady_window_from_ign_s": null,
+        "quasi_steady_TC01_mean_C": null,
+        "quasi_steady_TC01_std_C": null,
+        "broad_peak_TC01_mean_C": 120.9,
+        "broad_peak_TC01_std_C": 7.28,
+        "post_peak_cooling_rate_C_per_min": -1.51
+      },
+      "pre_ignition_noise_std_C": {
+        "TC_01": 0.047,
+        "TC_02": 0.046,
+        "TC_03": 0.101,
+        "TC_05": 0.0,
+        "TC_09": 0.035,
+        "TC_10": 0.092,
+        "TC_11": 0.048
+      }
+    },
+    {
+      "run": "R3",
+      "name": "2026-08-27_exponat_R3",
+      "loader_notes": [
+        "975 raw data rows -> 968 after coalescing 7 split-write pair(s); 3 row(s) out of experiment window (exp_time == -1).",
+        "exp_time spans 0-990 s over 965 samples; step median 1.00 s, mean 1.027 s, 26 skipped-second gap(s)."
+      ],
+      "n_split_writes": 7,
+      "n_out_of_window": 3,
+      "event_transitions": [
+        {
+          "from": 0,
+          "to": 1,
+          "exp_time_s": 17.0,
+          "wall_time_s": 19.5
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "exp_time_s": 47.0,
+          "wall_time_s": 50.3
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "exp_time_s": 303.0,
+          "wall_time_s": 305.5
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "exp_time_s": 403.0,
+          "wall_time_s": 406.1
+        }
+      ],
+      "t_ignition_s": 49.0,
+      "per_sensor": {
+        "TC_01": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.05,
+          "baseline_C": 27.1,
+          "peak_C": 126.5,
+          "peak_rise_C": 99.4,
+          "time_to_peak_from_ign_s": 415.0,
+          "mean_rise_post_ign_C": 74.9,
+          "t_over_60C_from_ign_s": 42.0,
+          "t_over_100C_from_ign_s": 157.0
+        },
+        "TC_02": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.16,
+          "baseline_C": 26.1,
+          "peak_C": 72.1,
+          "peak_rise_C": 46.0,
+          "time_to_peak_from_ign_s": 537.0,
+          "mean_rise_post_ign_C": 16.5,
+          "t_over_60C_from_ign_s": 407.0,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_03": {
+          "group": "back-wall column",
+          "x_m": 0.12,
+          "z_m": 0.23,
+          "baseline_C": 29.65,
+          "peak_C": 74.5,
+          "peak_rise_C": 44.8,
+          "time_to_peak_from_ign_s": 444.0,
+          "mean_rise_post_ign_C": 29.7,
+          "t_over_60C_from_ign_s": 154.0,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_05": {
+          "group": "ceiling centre",
+          "x_m": 0.35,
+          "z_m": 0.23,
+          "baseline_C": 26.7,
+          "peak_C": 31.4,
+          "peak_rise_C": 4.7,
+          "time_to_peak_from_ign_s": 424.0,
+          "mean_rise_post_ign_C": 3.1,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_09": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.015,
+          "baseline_C": 25.7,
+          "peak_C": 25.9,
+          "peak_rise_C": 0.2,
+          "time_to_peak_from_ign_s": 659.0,
+          "mean_rise_post_ign_C": 0.1,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_10": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.075,
+          "baseline_C": 25.7,
+          "peak_C": 26.9,
+          "peak_rise_C": 1.2,
+          "time_to_peak_from_ign_s": 268.0,
+          "mean_rise_post_ign_C": 0.5,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        },
+        "TC_11": {
+          "group": "doorway",
+          "x_m": 0.7,
+          "z_m": 0.14,
+          "baseline_C": 26.3,
+          "peak_C": 31.1,
+          "peak_rise_C": 4.8,
+          "time_to_peak_from_ign_s": 585.0,
+          "mean_rise_post_ign_C": 3.6,
+          "t_over_60C_from_ign_s": null,
+          "t_over_100C_from_ign_s": null
+        }
+      },
+      "structure": {
+        "back_wall_column_peak_C": {
+          "TC_01": 126.5,
+          "TC_02": 72.1,
+          "TC_03": 74.5
+        },
+        "column_is_non_monotonic_in_height": true,
+        "upper_layer_dT_T3_minus_T2_peak_C": 27.3,
+        "upper_layer_dT_T3_minus_T2_mean_post_ign_C": 16.8,
+        "stratification_onset_from_ign_s": 93.0,
+        "doorway_orders_by_height": true,
+        "doorway_dT_T11_minus_T9_peak_C": 5.3,
+        "ceiling_horizontal_dT_T3_minus_T5_peak_C": 43.1,
+        "ceiling_horizontal_dT_T3_minus_T5_mean_post_ign_C": 29.5,
+        "hot_layer_localized_over_fire": true
+      },
+      "characteristic_times": {
+        "record_start_exp_time_s": 0.0,
+        "record_end_exp_time_s": 990.0,
+        "thermal_onset_exp_time_s": 49.0,
+        "nearest_event_transition": "1->2 @ 47s",
+        "onset_minus_nearest_event_s": 2.0,
+        "t_ignition_used_s": 49.0,
+        "post_ignition_record_s": 941.0,
+        "time_to_stratification_from_ign_s": 93.0,
+        "time_to_plume_peak_from_ign_s": 415.0,
+        "quasi_steady_window_from_ign_s": null,
+        "quasi_steady_TC01_mean_C": null,
+        "quasi_steady_TC01_std_C": null,
+        "broad_peak_TC01_mean_C": 116.8,
+        "broad_peak_TC01_std_C": 5.52,
+        "post_peak_cooling_rate_C_per_min": -1.9
+      },
+      "pre_ignition_noise_std_C": {
+        "TC_01": 0.06,
+        "TC_02": 0.071,
+        "TC_03": 0.135,
+        "TC_05": 0.0,
+        "TC_09": 0.016,
+        "TC_10": 0.069,
+        "TC_11": 0.0
+      }
+    }
+  ],
+  "recommended_primary_run": "R1",
+  "primary_scoreboard": [
+    {
+      "run": "R1",
+      "score": 25.36,
+      "post_ignition_record_s": 546.0,
+      "mean_upper_layer_dT_C": 20.4,
+      "n_split_writes": 1,
+      "quasi_steady_window_s": null
+    },
+    {
+      "run": "R2",
+      "score": 23.96,
+      "post_ignition_record_s": 746.0,
+      "mean_upper_layer_dT_C": 18.5,
+      "n_split_writes": 4,
+      "quasi_steady_window_s": null
+    },
+    {
+      "run": "R3",
+      "score": 22.71,
+      "post_ignition_record_s": 941.0,
+      "mean_upper_layer_dT_C": 16.8,
+      "n_split_writes": 7,
+      "quasi_steady_window_s": null
+    }
+  ],
+  "figures": [
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R1_histories.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R1_structure.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R2_histories.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R2_structure.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R3_histories.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_R3_structure.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_overlay_plume.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_structure_overlay.png",
+    "/Users/samialachgar/Desktop/experiments/figures/exponat_repeatability.png"
+  ],
+  "csvs": [
+    "/Users/samialachgar/Desktop/experiments/results/exponat_events.csv",
+    "/Users/samialachgar/Desktop/experiments/results/exponat_per_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/results/exponat_cross_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/results/exponat_R1_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/exponat_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/exponat_R3_timeseries.csv"
+  ]
+}
