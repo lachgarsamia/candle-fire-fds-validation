@@ -1,0 +1,631 @@
+{
+  "runs": [
+    {
+      "key": "1cand_R3",
+      "file": "26082026_Candle_R3.csv",
+      "config": 1,
+      "role": "single-candle ANCHOR",
+      "weigh_notes": "single-candle ANCHOR; did NOT reach full steady state (only 1.62 g lost); mean HRR may slightly over-read steady value",
+      "meta_sample_description": "Candle_R3",
+      "meta_specimen_number": "R3",
+      "meta_initial_mass_g": "11,61",
+      "config_from_weight": "m_before=11.61 g -> 1 candle(s)",
+      "timeline": {
+        "source": "metadata (flameout cross-checked vs load-cell)",
+        "t_ignition_s": 30.0,
+        "t_flameout_s": 3115.0,
+        "burn_duration_s": 3085.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": 30.0,
+          "flameout_s": 3115.0,
+          "eot_s": 3297.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 40.0,
+          "shape_flameout_s": 3059.0,
+          "flameout_offset_meta_minus_shape_s": 56.0,
+          "balance_loss_over_metadata_window_g": null
+        }
+      },
+      "mass": {
+        "manual_before_g": 11.61,
+        "manual_after_g": 9.99,
+        "manual_delta_g": 1.62,
+        "balance_shape_delta_over_window_g": 1.54,
+        "agreement_g": -0.08
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 20.0,
+          "HRR_per_candle_W": 20.0
+        },
+        "low_dHc36": {
+          "HRR_total_W": 18.7,
+          "HRR_per_candle_W": 18.7
+        },
+        "high_dHc42": {
+          "HRR_total_W": 22.1,
+          "HRR_per_candle_W": 22.1
+        },
+        "mean_MLR_total_mg_s": 0.525,
+        "mean_MLR_per_candle_mg_s": 0.525,
+        "burn_duration_s": 3085.0,
+        "mass_consumed_total_g": 1.62,
+        "mass_consumed_per_candle_g": 1.62,
+        "dm_source": "manual weigh table"
+      },
+      "steady_window": {
+        "window_s": [
+          647.0,
+          2498.0
+        ],
+        "length_s": 1851.0,
+        "steady_MLR_total_mg_s": 0.503,
+        "steady_MLR_per_candle_mg_s": 0.503,
+        "steady_HRR_total_W_dHc38": 19.1,
+        "steady_HRR_per_candle_W_dHc38": 19.1,
+        "linear_fit_r2": 0.9997,
+        "max_deviation_from_linear_mg": 29.5
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 48.4,
+        "peak_HRR_total_W": 99.7,
+        "integrated_energy_MJ": 0.1493,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": false,
+        "dHc_implied_MJ_kg": 92.2
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.014,
+        "CO2_rise_over_burn_pct": 0.005,
+        "O2_noise": {
+          "pre_ign_std_pct": 0.0018,
+          "pre_ign_mean_pct": 20.9552,
+          "post_flame_std_pct": 0.0019
+        },
+        "O2_depletion_vs_noise_ratio": 7.8
+      }
+    },
+    {
+      "key": "1cand_long",
+      "file": "25082026_Candle_R1.csv",
+      "config": 1,
+      "role": "long-protocol rate cross-check (O2 HRR invalid)",
+      "weigh_notes": "~3.8h long-protocol run; HRR drift from dirty filter (changed next day) -> HRR INVALID, use mass-loss only; burned near-complete",
+      "meta_sample_description": "Candle",
+      "meta_specimen_number": "R1",
+      "meta_initial_mass_g": "11,25",
+      "config_from_weight": "m_before=11.25 g -> 1 candle(s)",
+      "timeline": {
+        "source": "metadata flameout + test-start as ignition",
+        "t_ignition_s": 60.0,
+        "t_flameout_s": 13845.0,
+        "burn_duration_s": 13785.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": null,
+          "flameout_s": 13845.0,
+          "eot_s": 14519.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 371.0,
+          "note": "ignition ambiguity ~60 s is negligible over a ~3.8 h burn"
+        }
+      },
+      "mass": {
+        "manual_before_g": 11.25,
+        "manual_after_g": 2.96,
+        "manual_delta_g": 8.29,
+        "balance_shape_delta_over_window_g": 8.24,
+        "agreement_g": -0.05
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 22.9,
+          "HRR_per_candle_W": 22.9
+        },
+        "low_dHc36": {
+          "HRR_total_W": 21.5,
+          "HRR_per_candle_W": 21.5
+        },
+        "high_dHc42": {
+          "HRR_total_W": 25.3,
+          "HRR_per_candle_W": 25.3
+        },
+        "mean_MLR_total_mg_s": 0.601,
+        "mean_MLR_per_candle_mg_s": 0.601,
+        "burn_duration_s": 13785.0,
+        "mass_consumed_total_g": 8.29,
+        "mass_consumed_per_candle_g": 8.29,
+        "dm_source": "manual weigh table"
+      },
+      "steady_window": {
+        "window_s": [
+          2817.0,
+          11088.0
+        ],
+        "length_s": 8271.0,
+        "steady_MLR_total_mg_s": 0.627,
+        "steady_MLR_per_candle_mg_s": 0.627,
+        "steady_HRR_total_W_dHc38": 23.8,
+        "steady_HRR_per_candle_W_dHc38": 23.8,
+        "linear_fit_r2": 0.9984,
+        "max_deviation_from_linear_mg": 128.5
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 41.2,
+        "peak_HRR_total_W": 160.5,
+        "integrated_energy_MJ": 0.5685,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": true,
+        "dHc_implied_MJ_kg": 68.6
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.029,
+        "CO2_rise_over_burn_pct": 0.014,
+        "O2_noise": {
+          "pre_ign_std_pct": 0.0022,
+          "pre_ign_mean_pct": 20.9478,
+          "post_flame_std_pct": 0.0008
+        },
+        "O2_depletion_vs_noise_ratio": 13.2
+      }
+    },
+    {
+      "key": "1cand_R2",
+      "file": "26082026_Candle_R2.csv",
+      "config": 1,
+      "role": "short / incomplete; timeline from load-cell shape",
+      "weigh_notes": "NOT a blank - it burned (lost 1.36 g); no ignition/flameout logged in metadata; short/incomplete; derive window from load-cell shape",
+      "meta_sample_description": "Candle_R2",
+      "meta_specimen_number": "R2",
+      "meta_initial_mass_g": "11,22",
+      "config_from_weight": "m_before=11.22 g -> 1 candle(s)",
+      "timeline": {
+        "source": "load-cell shape (no metadata timeline)",
+        "t_ignition_s": 94.0,
+        "t_flameout_s": 3216.0,
+        "burn_duration_s": 3122.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": null,
+          "flameout_s": null,
+          "eot_s": 3475.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 94.0,
+          "shape_flameout_s": 3216.0
+        }
+      },
+      "mass": {
+        "manual_before_g": 11.22,
+        "manual_after_g": 9.86,
+        "manual_delta_g": 1.36,
+        "balance_shape_delta_over_window_g": 1.32,
+        "agreement_g": -0.04
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 16.6,
+          "HRR_per_candle_W": 16.6
+        },
+        "low_dHc36": {
+          "HRR_total_W": 15.6,
+          "HRR_per_candle_W": 15.6
+        },
+        "high_dHc42": {
+          "HRR_total_W": 18.3,
+          "HRR_per_candle_W": 18.3
+        },
+        "mean_MLR_total_mg_s": 0.436,
+        "mean_MLR_per_candle_mg_s": 0.436,
+        "burn_duration_s": 3122.0,
+        "mass_consumed_total_g": 1.36,
+        "mass_consumed_per_candle_g": 1.36,
+        "dm_source": "manual weigh table"
+      },
+      "steady_window": {
+        "window_s": [
+          718.0,
+          2592.0
+        ],
+        "length_s": 1873.0,
+        "steady_MLR_total_mg_s": 0.407,
+        "steady_MLR_per_candle_mg_s": 0.407,
+        "steady_HRR_total_W_dHc38": 15.4,
+        "steady_HRR_per_candle_W_dHc38": 15.4,
+        "linear_fit_r2": 0.9993,
+        "max_deviation_from_linear_mg": 25.6
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 10.7,
+        "peak_HRR_total_W": 55.6,
+        "integrated_energy_MJ": 0.0335,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": false,
+        "dHc_implied_MJ_kg": 24.7
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.012,
+        "CO2_rise_over_burn_pct": 0.008,
+        "O2_noise": {
+          "pre_ign_std_pct": 0.0028,
+          "pre_ign_mean_pct": 20.9461,
+          "post_flame_std_pct": 0.0031
+        },
+        "O2_depletion_vs_noise_ratio": 4.3
+      }
+    },
+    {
+      "key": "3cand_R1",
+      "file": "26082026_3_Candles_R1.csv",
+      "config": 3,
+      "role": "cleanest 3-candle repeat",
+      "weigh_notes": "3 candles CONFIRMED by mass (11.61+11.53+11.05=34.19 g) - filename correct; internal metadata logged only candle 1",
+      "meta_sample_description": "Candle_R3",
+      "meta_specimen_number": "R3",
+      "meta_initial_mass_g": "11,61",
+      "config_from_weight": "m_before=34.19 g -> 3 candle(s)  [filename/metadata mismatch: metadata logged 1 candle]",
+      "timeline": {
+        "source": "metadata (flameout cross-checked vs load-cell)",
+        "t_ignition_s": 23.0,
+        "t_flameout_s": 2427.0,
+        "burn_duration_s": 2404.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": 23.0,
+          "flameout_s": 2427.0,
+          "eot_s": 3240.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 83.0,
+          "shape_flameout_s": 2384.0,
+          "flameout_offset_meta_minus_shape_s": 43.0,
+          "balance_loss_over_metadata_window_g": null
+        }
+      },
+      "mass": {
+        "manual_before_g": 34.19,
+        "manual_after_g": 30.66,
+        "manual_delta_g": 3.53,
+        "balance_shape_delta_over_window_g": 3.52,
+        "agreement_g": -0.01
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 55.8,
+          "HRR_per_candle_W": 18.6
+        },
+        "low_dHc36": {
+          "HRR_total_W": 52.4,
+          "HRR_per_candle_W": 17.5
+        },
+        "high_dHc42": {
+          "HRR_total_W": 61.7,
+          "HRR_per_candle_W": 20.6
+        },
+        "mean_MLR_total_mg_s": 1.468,
+        "mean_MLR_per_candle_mg_s": 0.489,
+        "burn_duration_s": 2404.0,
+        "mass_consumed_total_g": 3.53,
+        "mass_consumed_per_candle_g": 1.18,
+        "dm_source": "manual weigh table"
+      },
+      "steady_window": {
+        "window_s": [
+          504.0,
+          1946.0
+        ],
+        "length_s": 1442.0,
+        "steady_MLR_total_mg_s": 1.401,
+        "steady_MLR_per_candle_mg_s": 0.467,
+        "steady_HRR_total_W_dHc38": 53.2,
+        "steady_HRR_per_candle_W_dHc38": 17.7,
+        "linear_fit_r2": 0.9999,
+        "max_deviation_from_linear_mg": 18.3
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 161.0,
+        "peak_HRR_total_W": 216.3,
+        "integrated_energy_MJ": 0.3871,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": false,
+        "dHc_implied_MJ_kg": 109.7
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.031,
+        "CO2_rise_over_burn_pct": 0.013,
+        "O2_noise": {
+          "pre_ign_std_pct": 0.0016,
+          "pre_ign_mean_pct": 20.9529,
+          "post_flame_std_pct": 0.0021
+        },
+        "O2_depletion_vs_noise_ratio": 19.4
+      }
+    },
+    {
+      "key": "3cand_R2",
+      "file": "27082026_3_Candles_R2.csv",
+      "config": 3,
+      "role": "3-candle, short burn",
+      "weigh_notes": "3 candles (11.11+11.44+11.58); short burn ~844 s (flameout 856 s)",
+      "meta_sample_description": "3_Candles_R2",
+      "meta_specimen_number": "R2",
+      "meta_initial_mass_g": "38,13",
+      "config_from_weight": "m_before=34.13 g -> 3 candle(s)  [filename/metadata mismatch: metadata logged 1 candle]",
+      "timeline": {
+        "source": "metadata (flameout cross-checked vs load-cell)",
+        "t_ignition_s": 12.0,
+        "t_flameout_s": 856.0,
+        "burn_duration_s": 844.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": 12.0,
+          "flameout_s": 856.0,
+          "eot_s": 973.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 51.0,
+          "shape_flameout_s": 843.0,
+          "flameout_offset_meta_minus_shape_s": 13.0,
+          "balance_loss_over_metadata_window_g": null
+        }
+      },
+      "mass": {
+        "manual_before_g": 34.13,
+        "manual_after_g": 33.03,
+        "manual_delta_g": 1.1,
+        "balance_shape_delta_over_window_g": 1.02,
+        "agreement_g": -0.08
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 49.5,
+          "HRR_per_candle_W": 16.5
+        },
+        "low_dHc36": {
+          "HRR_total_W": 46.5,
+          "HRR_per_candle_W": 15.5
+        },
+        "high_dHc42": {
+          "HRR_total_W": 54.7,
+          "HRR_per_candle_W": 18.2
+        },
+        "mean_MLR_total_mg_s": 1.303,
+        "mean_MLR_per_candle_mg_s": 0.434,
+        "burn_duration_s": 844.0,
+        "mass_consumed_total_g": 1.1,
+        "mass_consumed_per_candle_g": 0.37,
+        "dm_source": "manual weigh table"
+      },
+      "steady_window": {
+        "window_s": [
+          181.0,
+          687.0
+        ],
+        "length_s": 506.0,
+        "steady_MLR_total_mg_s": 1.263,
+        "steady_MLR_per_candle_mg_s": 0.421,
+        "steady_HRR_total_W_dHc38": 48.0,
+        "steady_HRR_per_candle_W_dHc38": 16.0,
+        "linear_fit_r2": 0.9993,
+        "max_deviation_from_linear_mg": 18.6
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 47.5,
+        "peak_HRR_total_W": 89.9,
+        "integrated_energy_MJ": 0.04,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": false,
+        "dHc_implied_MJ_kg": 36.4
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.02,
+        "CO2_rise_over_burn_pct": 0.012,
+        "O2_noise": {
+          "post_flame_std_pct": 0.0016
+        },
+        "O2_depletion_vs_noise_ratio": null
+      }
+    },
+    {
+      "key": "3cand_R3",
+      "file": "27082026_3_Candles_R3.csv",
+      "config": 3,
+      "role": "3-candle, no after-mass -> balance-shape mass",
+      "weigh_notes": "3 candles (11.29+11.13+11.78); after-mass NOT recorded -> no Route C HRR; timeline only (ignition 32 s, flameout 1757 s)",
+      "meta_sample_description": "3_Candles_R3",
+      "meta_specimen_number": "R3",
+      "meta_initial_mass_g": "34,20",
+      "config_from_weight": "m_before=34.2 g -> 3 candle(s)  [filename/metadata mismatch: metadata logged 1 candle]",
+      "timeline": {
+        "source": "metadata (flameout cross-checked vs load-cell)",
+        "t_ignition_s": 32.0,
+        "t_flameout_s": 1757.0,
+        "burn_duration_s": 1725.0,
+        "metadata": {
+          "test_start_s": 60.0,
+          "ignition_s": 32.0,
+          "flameout_s": 1757.0,
+          "eot_s": 2064.0
+        },
+        "load_cell_cross_check": {
+          "shape_ignition_s": 89.0,
+          "shape_flameout_s": 1722.0,
+          "flameout_offset_meta_minus_shape_s": 35.0,
+          "balance_loss_over_metadata_window_g": null
+        }
+      },
+      "mass": {
+        "manual_before_g": 34.2,
+        "manual_after_g": null,
+        "manual_delta_g": null,
+        "balance_shape_delta_over_window_g": 2.66,
+        "agreement_g": null
+      },
+      "routeC_mean_HRR": {
+        "primary_dHc38": {
+          "HRR_total_W": 58.6,
+          "HRR_per_candle_W": 19.5
+        },
+        "low_dHc36": {
+          "HRR_total_W": 55.0,
+          "HRR_per_candle_W": 18.3
+        },
+        "high_dHc42": {
+          "HRR_total_W": 64.8,
+          "HRR_per_candle_W": 21.6
+        },
+        "mean_MLR_total_mg_s": 1.542,
+        "mean_MLR_per_candle_mg_s": 0.514,
+        "burn_duration_s": 1725.0,
+        "mass_consumed_total_g": 2.66,
+        "mass_consumed_per_candle_g": 0.89,
+        "dm_source": "load-cell shape (no after-mass)"
+      },
+      "steady_window": {
+        "window_s": [
+          377.0,
+          1412.0
+        ],
+        "length_s": 1035.0,
+        "steady_MLR_total_mg_s": 1.617,
+        "steady_MLR_per_candle_mg_s": 0.539,
+        "steady_HRR_total_W_dHc38": 61.5,
+        "steady_HRR_per_candle_W_dHc38": 20.5,
+        "linear_fit_r2": 0.9997,
+        "max_deviation_from_linear_mg": 30.4
+      },
+      "routeA_O2_HRR_crosscheck": {
+        "mean_HRR_total_W": 20.9,
+        "peak_HRR_total_W": 87.2,
+        "integrated_energy_MJ": 0.036,
+        "label": "O2-consumption HRR, near instrument noise floor -- QUALITATIVE",
+        "disqualified": false
+      },
+      "gas": {
+        "O2_depletion_over_burn_pct": 0.029,
+        "CO2_rise_over_burn_pct": 0.018,
+        "O2_noise": {
+          "pre_ign_std_pct": 0.0012,
+          "pre_ign_mean_pct": 20.9464,
+          "post_flame_std_pct": 0.0012
+        },
+        "O2_depletion_vs_noise_ratio": 24.2
+      }
+    }
+  ],
+  "cross_run": {
+    "single_candle": {
+      "anchor_R3_HRR_per_candle_W": 20.0,
+      "anchor_R3_note": "did NOT reach full steady state (1.6 g lost) -> may slightly over-read",
+      "long_protocol_25aug_MLR_per_candle_mg_s": 0.601,
+      "long_protocol_25aug_note": "O2 HRR disqualified (dirty filter); mass-loss RATE only",
+      "R2_HRR_per_candle_W": 16.6,
+      "R2_note": "short/incomplete; timeline from load-cell shape",
+      "rate_crosscheck_single_vs_anchor": {
+        "anchor_R3_MLR_per_candle_mg_s": 0.525,
+        "long_25aug_MLR_per_candle_mg_s": 0.601,
+        "ratio": 1.14
+      },
+      "caveat": "single-candle side = 1 matched burn (R3) + 1 long-protocol rate cross-check (25.08) + 1 short partial (R2). NOT three replicates."
+    },
+    "three_candle_repeatability_n3": {
+      "HRR_per_candle_W": {
+        "n": 3,
+        "mean": 18.2,
+        "std": 1.54,
+        "CoV_pct": 8.5,
+        "values": [
+          18.6,
+          16.5,
+          19.5
+        ]
+      },
+      "MLR_per_candle_mg_s": {
+        "n": 3,
+        "mean": 0.48,
+        "std": 0.04,
+        "CoV_pct": 8.5,
+        "values": [
+          0.49,
+          0.43,
+          0.51
+        ]
+      },
+      "ignition_times_s": {
+        "n": 3,
+        "mean": 22.33,
+        "std": 10.02,
+        "CoV_pct": 44.9,
+        "values": [
+          23.0,
+          12.0,
+          32.0
+        ]
+      },
+      "flameout_times_s": {
+        "n": 3,
+        "mean": 1680.0,
+        "std": 788.33,
+        "CoV_pct": 46.9,
+        "values": [
+          2427.0,
+          856.0,
+          1757.0
+        ]
+      },
+      "burn_durations_s": {
+        "n": 3,
+        "mean": 1657.67,
+        "std": 782.18,
+        "CoV_pct": 47.2,
+        "values": [
+          2404.0,
+          844.0,
+          1725.0
+        ]
+      }
+    },
+    "superposition_test": {
+      "HRR_ratio_3candle_total_over_1candle": 2.73,
+      "per_candle_suppression_vs_single_pct": 9.0,
+      "MLR_ratio_3candle_total_over_1candle": 2.74,
+      "expected_if_noninteracting": 3.0,
+      "interpretation": "per-candle rate in the 3-candle runs is within ~10% of the single-candle anchor -> candles at this spacing behave as ~independent sources; model 3 SEPARATE burners in FDS, not one merged source. Mild suppression is a minor, reportable coupling effect (vitiation / radiative cross-talk)."
+    },
+    "dHc_implied_by_run_MJ_kg": {
+      "1cand_R3": 92.2,
+      "1cand_R2": 24.7,
+      "3cand_R1": 109.7,
+      "3cand_R2": 36.4
+    },
+    "dHc_implied_verdict": "Route-A dHc_implied ranges 25-110 MJ/kg across runs (literature paraffin 42-46). The spread is far larger than the wax uncertainty -> the O2-consumption energy CANNOT pin dHc for a fire this small. Documented disagreement, not tuned."
+  },
+  "figures": [
+    "/Users/samialachgar/Desktop/experiments/figures/cone_mass_delta.png",
+    "/Users/samialachgar/Desktop/experiments/figures/cone_hrr_per_candle.png",
+    "/Users/samialachgar/Desktop/experiments/figures/cone_routeA_noise.png",
+    "/Users/samialachgar/Desktop/experiments/figures/cone_o2_depletion.png",
+    "/Users/samialachgar/Desktop/experiments/figures/cone_dHc_implied.png",
+    "/Users/samialachgar/Desktop/experiments/figures/cone_config_compare.png"
+  ],
+  "csvs": [
+    "/Users/samialachgar/Desktop/experiments/results/cone_per_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_cross_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_R3_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_long_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R1_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R3_timeseries.csv"
+  ],
+  "constants": {
+    "dHc_eff_MJ_kg": 38.0,
+    "dHc_band_MJ_kg": [
+      35.7,
+      42.0
+    ]
+  }
+}

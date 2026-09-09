@@ -1,0 +1,7 @@
+run,config,role,t_ignition_s,t_flameout_s,burn_duration_s,mass_consumed_total_g,mass_consumed_per_candle_g,mean_MLR_per_candle_mg_s,routeC_HRR_per_candle_W,routeC_HRR_per_candle_W_lo36,routeC_HRR_per_candle_W_hi42,steady_HRR_per_candle_W,routeA_mean_HRR_total_W,routeA_dHc_implied_MJ_kg,O2_depletion_pct,O2_noise_std_pct,O2_depl_over_noise
+1cand_R3,1,single-candle ANCHOR,30.0,3115.0,3085.0,1.62,1.62,0.525,20.0,18.7,22.1,19.1,48.4,92.2,0.014,0.0018,7.8
+1cand_long,1,long-protocol rate cross-check (O2 HRR invalid),60.0,13845.0,13785.0,8.29,8.29,0.601,22.9,21.5,25.3,23.8,,,0.029,0.0022,13.2
+1cand_R2,1,short / incomplete; timeline from load-cell shape,94.0,3216.0,3122.0,1.36,1.36,0.436,16.6,15.6,18.3,15.4,10.7,24.7,0.012,0.0028,4.3
+3cand_R1,3,cleanest 3-candle repeat,23.0,2427.0,2404.0,3.53,1.18,0.489,18.6,17.5,20.6,17.7,161.0,109.7,0.031,0.0016,19.4
+3cand_R2,3,"3-candle, short burn",12.0,856.0,844.0,1.1,0.37,0.434,16.5,15.5,18.2,16.0,47.5,36.4,0.02,,
+3cand_R3,3,"3-candle, no after-mass -> balance-shape mass",32.0,1757.0,1725.0,2.66,0.89,0.514,19.5,18.3,21.6,20.5,20.9,,0.029,0.0012,24.2

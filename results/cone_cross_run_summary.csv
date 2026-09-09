@@ -1,0 +1,15 @@
+quantity,n,mean,std,CoV_pct,values
+3-candle HRR per candle (W),3,18.2,1.54,8.5,"[18.6, 16.5, 19.5]"
+3-candle MLR per candle (mg/s),3,0.48,0.04,8.5,"[0.49, 0.43, 0.51]"
+3-candle ignition time (s),3,22.33,10.02,44.9,"[23.0, 12.0, 32.0]"
+3-candle flameout time (s),3,1680.0,788.33,46.9,"[2427.0, 856.0, 1757.0]"
+3-candle burn duration (s),3,1657.67,782.18,47.2,"[2404.0, 844.0, 1725.0]"
+
+single-candle anchor R3 HRR/candle (W),1,20.0,,,
+superposition ratio (3-cand total / 1-cand),,2.73,,,ideal 3.0
+per-candle suppression vs single (%),,9.0,,,
+
+dHc_implied 1cand_R3 (MJ/kg),,92.2,,,literature 42-46
+dHc_implied 1cand_R2 (MJ/kg),,24.7,,,literature 42-46
+dHc_implied 3cand_R1 (MJ/kg),,109.7,,,literature 42-46
+dHc_implied 3cand_R2 (MJ/kg),,36.4,,,literature 42-46
