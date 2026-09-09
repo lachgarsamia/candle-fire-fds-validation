@@ -1,0 +1,101 @@
+
+ Starting FDS ...
+
+ MPI Process      0 started on Samias-MacBook-Pro.local
+
+ Reading FDS input file ...
+
+WARNING: SPEC PARAFFIN is not in the table of pre-defined species. See the Users Guide chapter on species for the treatment of any undefined properties.
+
+ Fire Dynamics Simulator
+
+ Current Date     : September  2, 2026  01:49:21
+ Revision         : FDS-6.11.1-0-gff928db-release
+ Revision Date    : Thu Jul 9 17:24:07 2026 -0400
+ Compiler         : Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.10.0 Build 20230609_000000
+ Compilation Date : Jul 10, 2026  12:51:24
+
+ Number of MPI Processes:  1
+ Number of OpenMP Threads: 5
+
+ MPI version: 3.1
+ MPI library version: Open MPI v5.0.10, package: Open MPI mnv@wildfire.campus.nist.gov Distribution, ident: 5.0.10, repo rev: v5.0.10, Feb 23, 2026
+ Hypre library version: v3.0.0
+ Sundials library version: v7.5.0
+
+ Job TITLE        : candle compartment -- 1 candle(s), near-fire dx=5.0 mm, SEALED box
+ Job ID string    : candle_medium_dx5
+
+ Time Step:       1, Simulation Time:   0.01129 s
+ Time Step:       2, Simulation Time:   0.02258 s
+ Time Step:       3, Simulation Time:   0.03387 s
+ Time Step:       4, Simulation Time:   0.04516 s
+ Time Step:       5, Simulation Time:   0.05645 s
+ Time Step:       6, Simulation Time:   0.06774 s
+ Time Step:       7, Simulation Time:   0.07903 s
+ Time Step:       8, Simulation Time:   0.09032 s
+ Time Step:       9, Simulation Time:   0.10161 s
+ Time Step:      10, Simulation Time:   0.11290 s
+ Time Step:      20, Simulation Time:   0.22580 s
+ Time Step:      30, Simulation Time:   0.33870 s
+ Time Step:      40, Simulation Time:   0.45160 s
+ Time Step:      50, Simulation Time:   0.56450 s
+ Time Step:      60, Simulation Time:   0.67740 s
+ Time Step:      70, Simulation Time:   0.79030 s
+ Time Step:      80, Simulation Time:   0.90320 s
+ Time Step:      90, Simulation Time:   1.01610 s
+ Time Step:     100, Simulation Time:   1.12900 s
+ Time Step:     200, Simulation Time:   2.25800 s
+ Time Step:     300, Simulation Time:   3.38701 s
+ Time Step:     400, Simulation Time:   4.51601 s
+ Time Step:     500, Simulation Time:   5.64501 s
+ Time Step:     600, Simulation Time:   6.77401 s
+ Time Step:     700, Simulation Time:   7.90301 s
+ Time Step:     800, Simulation Time:   9.03202 s
+ Time Step:     900, Simulation Time:  10.16102 s
+ Time Step:    1000, Simulation Time:  11.23644 s
+ Time Step:    1100, Simulation Time:  12.23512 s
+ Time Step:    1200, Simulation Time:  13.14817 s
+ Time Step:    1300, Simulation Time:  14.01430 s
+ Time Step:    1400, Simulation Time:  14.83533 s
+ Time Step:    1500, Simulation Time:  15.65637 s
+ Time Step:    1600, Simulation Time:  16.40255 s
+ Time Step:    1700, Simulation Time:  17.14133 s
+ Time Step:    1800, Simulation Time:  17.88011 s
+ Time Step:    1900, Simulation Time:  18.57894 s
+ Time Step:    2000, Simulation Time:  19.24372 s
+ Time Step:    2100, Simulation Time:  19.90850 s
+ Time Step:    2200, Simulation Time:  20.57328 s
+ Time Step:    2300, Simulation Time:  21.18034 s
+ Time Step:    2400, Simulation Time:  21.77801 s
+ Time Step:    2500, Simulation Time:  22.37568 s
+ Time Step:    2600, Simulation Time:  22.97335 s
+ Time Step:    2700, Simulation Time:  23.57102 s
+ Time Step:    2800, Simulation Time:  24.10902 s
+ Time Step:    2900, Simulation Time:  24.64518 s
+ Time Step:    3000, Simulation Time:  25.18134 s
+ Time Step:    3100, Simulation Time:  25.71750 s
+ Time Step:    3200, Simulation Time:  26.25366 s
+ Time Step:    3300, Simulation Time:  26.78982 s
+ Time Step:    3400, Simulation Time:  27.32597 s
+ Time Step:    3500, Simulation Time:  27.86213 s
+ Time Step:    3600, Simulation Time:  28.39829 s
+ Time Step:    3700, Simulation Time:  28.93445 s
+ Time Step:    3800, Simulation Time:  29.47061 s
+ Time Step:    3900, Simulation Time:  30.00677 s
+ Time Step:    4000, Simulation Time:  30.54293 s
+ Time Step:    4100, Simulation Time:  31.07909 s
+ Time Step:    4200, Simulation Time:  31.61524 s
+ Time Step:    4300, Simulation Time:  32.15140 s
+ Time Step:    4400, Simulation Time:  32.68756 s
+ Time Step:    4500, Simulation Time:  33.22372 s
+ Time Step:    4600, Simulation Time:  33.75988 s
+ Time Step:    4700, Simulation Time:  34.29604 s
+ Time Step:    4800, Simulation Time:  34.83220 s
+ Time Step:    4900, Simulation Time:  35.36836 s
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+fds_openmp         0000000108F3DBEA  for__signal_handl     Unknown  Unknown
+libsystem_platfor  00007FF80FA1F25D  _sigtramp             Unknown  Unknown
+fds_openmp         0000000102A7486B  rad_mp_get_kappa_     Unknown  Unknown
+fds_openmp         0000000102A6B9C4  radcompute_radiat     Unknown  Unknown

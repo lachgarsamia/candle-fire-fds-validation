@@ -1,0 +1,58 @@
+#!/bin/bash -l
+# ============================================================================
+# SLURM batch -- candle-compartment FDS FINE-mesh run (P04) -- Pleiades / CoBra
+#
+# LAUNCH: `mpiexec fds` (Intel-MPI Hydra reads the SLURM allocation itself).
+#   NOT `srun fds` -- that does not wire a PMI server for Pleiades'
+#   Intel MPI 2021.15 -> "PMI server not found" -> every mesh on rank 0.
+#
+# DECK / --ntasks (must equal the &MESH count):
+#   candle_fine_nest20_mpi.fds   7 &MESH (1 outer + 6 core z-slabs), 2.0 mm  <- FIRST
+#   candle_fine_nest15_mpi.fds   7 &MESH (1 outer + 6 core z-slabs), 1.5 mm
+#   candle_fine_nest20.fds       2 &MESH,  --ntasks=2 --cpus-per-task=32 (OpenMP fallback)
+#
+# The 10-outer/12-core "22-mesh" decks wedge FDS 6.11.1 in init on this stack
+# (~6 GB/rank, no timestep). The 1-outer + 6-core-slab split keeps the embedded
+# connectivity a simple star and is the one to use.
+# ============================================================================
+#SBATCH --job-name=candle_n20
+#SBATCH --account=cobra
+#SBATCH --partition=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=7
+#SBATCH --cpus-per-task=4
+#SBATCH --time=24:00:00
+#SBATCH --output=stdout.%j
+#SBATCH --error=stderr.%j
+
+module purge
+module load FDS/6.11.1
+echo "fds     -> $(which fds)"
+echo "mpiexec -> $(which mpiexec)"
+
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+export OMP_STACKSIZE=200M
+
+DECK=candle_fine_nest20_mpi.fds           # <-- match --ntasks (7 for *_mpi.fds)
+mpiexec fds "$DECK"
+
+# ---------------------------------------------------------------------------
+# DEBUG-NODE SANITY TEST before the big slot:
+#   salloc --account=cobra --partition=short --ntasks=7 --cpus-per-task=4 --time=00:20:00
+#   cd /beegfs/lachgar/candle_fds
+#   module purge && module load FDS/6.11.1
+#   export OMP_NUM_THREADS=4 OMP_STACKSIZE=200M
+#   mpiexec fds candle_fine_nest20_mpi.fds
+#
+#   PASS = "Number of MPI Processes:  7" ; zero "VENT ... rejected" ;
+#          reaches "Time Step 1" within ~1-2 min (NOT 7 min of silence) ;
+#          _hrr.csv col 2 climbing toward 0.018 kW past the 25 s ramp.
+#   Then Ctrl-C, exit, edit DECK if needed, sbatch candle_fine.batch.
+#
+# If it goes silent > 3 min with no .out (the 22-mesh failure mode) -> the split
+# still wedges init; fall back to candle_fine_nest20.fds (2-mesh, --ntasks=2,
+# --cpus-per-task=32) which is validated to step, and drop T_END if the wall
+# clock won't reach 150 s.
+#
+# Send back for P05 (small): <chid>_devc.csv  <chid>_hrr.csv  <chid>.out
+#   (+ <chid>_*.sf slices if produced -- the plume/reaction-zone picture)

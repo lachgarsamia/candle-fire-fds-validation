@@ -1,0 +1,20 @@
+#!/bin/bash -l
+#SBATCH --job-name=candle_m5
+#SBATCH --account=cobra
+#SBATCH --partition=normal
+#SBATCH --nodes=1
+#SBATCH --ntasks=10
+#SBATCH --cpus-per-task=4
+#SBATCH --time=12:00:00
+#SBATCH --output=stdout.%j
+#SBATCH --error=stderr.%j
+
+module purge
+module load FDS/6.11.1
+echo "fds     -> $(which fds)"
+echo "mpiexec -> $(which mpiexec)"
+
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+export OMP_STACKSIZE=200M
+
+mpiexec fds candle_medium_dx5_mpi.fds
