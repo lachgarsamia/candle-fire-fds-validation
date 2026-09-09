@@ -612,14 +612,14 @@
     "/Users/samialachgar/Desktop/experiments/figures/cone_config_compare.png"
   ],
   "csvs": [
-    "/Users/samialachgar/Desktop/experiments/results/cone_per_run_summary.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_cross_run_summary.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_R3_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_long_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_1cand_R2_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R1_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R2_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/cone_3cand_R3_timeseries.csv"
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_per_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_cross_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_1cand_R3_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_1cand_long_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_1cand_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_3cand_R1_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_3cand_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/cone_3cand_R3_timeseries.csv"
   ],
   "constants": {
     "dHc_eff_MJ_kg": 38.0,

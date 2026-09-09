@@ -6,7 +6,7 @@ candle soot. This script measures LAYER DYNAMICS ONLY -- the height of the
 fog/clear boundary and the fill timescale -- never concentration.
 
 Two products per clip:
-  results/fog_layer_<clip>.csv     interface height z(t) at x = 0.12 / 0.35 / 0.66
+  data/processed/fog_layer_<clip>.csv     interface height z(t) at x = 0.12 / 0.35 / 0.66
                                    + room-mean obscuration, ignition-aligned
   figures/fog_<clip>_montage.png   frames with the detected interface drawn
 

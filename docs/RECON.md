@@ -430,7 +430,7 @@ Verdict legend: **as-is** = usable unchanged · **changes** = usable with modifi
 
 ### B.4 Exponat compartment `.txt` — format map + parser specification
 
-Files: `2026-08-27_exponat_R1.txt` (864 data rows), `_R2.txt` (806), `_R3.txt` (975), all in
+Files: `data/raw/compartment/2026-08-27_exponat_R1.txt` (864 data rows), `_R2.txt` (806), `_R3.txt` (975), all in
 `/Users/samialachgar/Desktop/experiments/`. All three share one identical 89-column layout.
 
 **A separate parser is required — it has nothing in common with the cone dialect.** But it is a

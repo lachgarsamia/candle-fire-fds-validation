@@ -86,7 +86,7 @@ recommended primary), producing:
 1. Launch `candle_base_dx5.fds` (background, ~8–12 h). Monitor HRR + a few TCs
    for sanity in the first ~30 min; abort early if the fire misbehaves.
 2. While it runs: write `p03_baseline.py` (FDS `_devc.csv` → overlay on
-   `results/exponat_R1_timeseries.csv`, same metrics as P02).
+   `data/processed/exponat_R1_timeseries.csv`, same metrics as P02).
 3. On completion: generate the comparison figures + `FDS_BASELINE_FINDINGS.md`
    with the three-way uncertainty decomposition.
 4. Update `PROJECT_STATE.md`; hand P04 (mesh study) the baseline as its

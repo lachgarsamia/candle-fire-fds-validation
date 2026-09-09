@@ -1,8 +1,8 @@
 # CONE FINDINGS — candle fire-source characterization
 
-**Phase 01 (REVISED).** Inputs: 6 cone-calorimeter CSVs + `weights.csv` (manual
-weigh table). Code: `cone_loader.py`, `cone_analysis.py`. Figures in `figures/`,
-tables in `results/`. Settled facts from `PROJECT_STATE.md` / Prompt 01 REVISED
+**Phase 01 (REVISED).** Inputs: 6 cone-calorimeter CSVs + `data/raw/cone/weights.csv` (manual
+weigh table). Code: `src/cone_loader.py`, `src/cone_analysis.py`. Figures in `figures/`,
+tables in `data/processed/`. Settled facts from `PROJECT_STATE.md` / Prompt 01 REVISED
 are used as given and not re-litigated.
 
 ---
@@ -103,8 +103,8 @@ inside the burning runs (§5).
 
 ## 3. Per-run results
 
-Full table: `results/cone_per_run_summary.csv`. Time series:
-`results/cone_<run>_timeseries.csv`.
+Full table: `data/processed/cone_per_run_summary.csv`. Time series:
+`data/processed/cone_<run>_timeseries.csv`.
 
 ### 3.1 Timeline — metadata vs load-cell shape
 
@@ -170,7 +170,7 @@ stated uncertainty.
 
 ### 4.1 3-candle repeatability (n = 3 genuine repeats)
 
-Full table: `results/cone_cross_run_summary.csv`.
+Full table: `data/processed/cone_cross_run_summary.csv`.
 
 | quantity | R1 | R2 | R3 | mean ± std | CoV |
 |---|---|---|---|---|---|

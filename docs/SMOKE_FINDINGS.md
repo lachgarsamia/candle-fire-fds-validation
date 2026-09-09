@@ -3,7 +3,7 @@
 **Status: PRELIMINARY.** The qualitative video finding (§3) is a real result and
 stands on its own. The quantitative tracer↔fog transport comparison (§5) is
 pending the passive-tracer FDS run (`s7_tracer`) and validation of the video
-digitization (`fog_digitize.py`).
+digitization (`src/fog_digitize.py`).
 
 ---
 
@@ -82,7 +82,7 @@ spatially localized** compartment fire.
 
 ## 4. Method notes / limitations
 
-- **Calibration** (`fog_digitize.py :: CALIB`): anchored on the inner-room floor
+- **Calibration** (`src/fog_digitize.py :: CALIB`): anchored on the inner-room floor
   (z = 0) and ceiling underside (z = 0.23 m), and the candle (x ≈ 0.09 m). z-axis
   is solid; x-axis good to ≈ ±1 cm.
 - **The x = 0.35 m scan line is occlusion-limited** — a black bracket/mirror
@@ -121,5 +121,5 @@ profiles, `tr_{room,upper,lower,plenum}mean` volume means, centre-plane
 `zint_*` goes in the **same figure as a separate, labelled thermal-reference
 line** — not the comparison target.
 
-Do not build §5 until `s7_tracer` completes **and** `fog_digitize.py` output is
+Do not build §5 until `s7_tracer` completes **and** `src/fog_digitize.py` output is
 validated against hand-picked frames.

@@ -10,10 +10,10 @@ Outputs (all under ./figures and ./results):
   figures/exponat_overlay_plume.png       TC_01 & TC_03, 3 runs, ignition-aligned
   figures/exponat_structure_overlay.png   dT stratification metrics, 3 runs
   figures/exponat_repeatability.png       per-sensor peak rise, mean +/- std
-  results/exponat_<run>_timeseries.csv    tidy per-run table (write_series_csv)
-  results/exponat_events.csv              event transitions, all runs
-  results/exponat_per_run_summary.csv     per-run / per-sensor metrics
-  results/exponat_cross_run_summary.csv   repeatability (mean +/- std, CoV)
+  data/processed/exponat_<run>_timeseries.csv    tidy per-run table (write_series_csv)
+  data/processed/exponat_events.csv              event transitions, all runs
+  data/processed/exponat_per_run_summary.csv     per-run / per-sensor metrics
+  data/processed/exponat_cross_run_summary.csv   repeatability (mean +/- std, CoV)
 
 Reuse (RECON Part B): timeseries.write_series_csv as-is; devices.TC_THRESHOLDS;
 the crossing-time helper mirrors summary_stats._first_threshold_time but indexes
@@ -36,9 +36,9 @@ from exponat_loader import (
 )
 
 RUNS = {
-    "R1": f"{_repro.DATA_DIR}/2026-08-27_exponat_R1.txt",
-    "R2": f"{_repro.DATA_DIR}/2026-08-27_exponat_R2.txt",
-    "R3": f"{_repro.DATA_DIR}/2026-08-27_exponat_R3.txt",
+    "R1": f"{_repro.COMPARTMENT_DIR}/2026-08-27_exponat_R1.txt",
+    "R2": f"{_repro.COMPARTMENT_DIR}/2026-08-27_exponat_R2.txt",
+    "R3": f"{_repro.COMPARTMENT_DIR}/2026-08-27_exponat_R3.txt",
 }
 
 TC_COLOR = {

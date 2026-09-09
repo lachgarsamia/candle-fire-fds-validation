@@ -2,7 +2,7 @@
   figures/p05_T3_convergence.png   : ceiling-over-fire temperature vs mesh resolution
   figures/p05_T1_nearfield.png     : near-fire gas-temperature field (from the rake)
                                      showing the hot plume column and T1's position
-Data: fds/runs/*/*_devc.csv  +  results/exponat_{R1,R2,R3}_timeseries.csv
+Data: fds/runs/*/*_devc.csv  +  data/processed/exponat_{R1,R2,R3}_timeseries.csv
 """
 from __future__ import annotations
 import csv
@@ -44,10 +44,10 @@ def exp_rise_band(tc_col, tau):
 def fig_T3_convergence():
     DSTAR = 1.21  # cm
     meshes = [
-        ("10 mm", 1.0, "fds/runs/coarse/candle_coarse_dx10_devc.csv"),
-        ("5 mm", 0.5, "fds/runs/medium/candle_medium_dx5_devc.csv"),
-        ("2.0 mm", 0.2, "fds/runs/nest20/candle_fine_nest20_mpi_devc.csv"),
-        ("1.5 mm", 0.15, "fds/runs/nest15/candle_fine_nest15_mpi_devc.csv"),
+        ("10 mm", 1.0, f"{_repro.FDS_RUNS}/coarse/candle_coarse_dx10_devc.csv"),
+        ("5 mm", 0.5, f"{_repro.FDS_RUNS}/medium/candle_medium_dx5_devc.csv"),
+        ("2.0 mm", 0.2, f"{_repro.FDS_RUNS}/nest20/candle_fine_nest20_mpi_devc.csv"),
+        ("1.5 mm", 0.15, f"{_repro.FDS_RUNS}/nest15/candle_fine_nest15_mpi_devc.csv"),
     ]
     dsx, T3, labels, tend = [], [], [], []
     for name, dx_cm, path in meshes:
@@ -100,7 +100,8 @@ def fig_T3_convergence():
 
 
 # ---------------------------------------------------------------- figure 2
-def fig_T1_nearfield(devc="fds/runs/nest20/candle_fine_nest20_mpi_devc.csv", label="2.0 mm"):
+def fig_T1_nearfield(devc=None, label="2.0 mm"):
+    devc = devc or f"{_repro.FDS_RUNS}/nest20/candle_fine_nest20_mpi_devc.csv"
     c = load_devc(devc)
     t = c["Time"]; i = -1
     xs = [0.075, 0.090, 0.105, 0.120, 0.135, 0.150]

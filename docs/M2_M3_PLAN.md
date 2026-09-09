@@ -23,7 +23,7 @@ the layer columns; NZ≤2). `--split 4,1,2` = 8 ranks, ~150 k cells each. Submit
 `--ntasks=8 --cpus-per-task=4`.
 
 **Retrieval when a run finishes:** `scp cobra:/beegfs/lachgar/candle_fds/sweep/run/<chid>/<chid>_devc.csv`
-→ `fds/runs/sweep/<chid>/`, then `python sensitivity_post.py`.
+→ `fds/runs/sweep/<chid>/`, then `python src/sensitivity_post.py`.
 
 ## P4 — fog video: what's established
 
@@ -97,7 +97,7 @@ far-field.
 **Deliverable (P1–P3):** `SENSITIVITY_FINDINGS.md` — per-sensor °C band from each
 knob; the "model discrepancy" column in VALIDATION_FINDINGS.md §2 becomes
 itemised (wall BC, HRR, χr) instead of a lump residual. Post-processor
-`sensitivity_post.py` is written and waiting for the CSVs.
+`src/sensitivity_post.py` is written and waiting for the CSVs.
 
 ---
 
@@ -136,7 +136,7 @@ itemised (wall BC, HRR, χr) instead of a lump residual. Post-processor
   ignition anchor (EXPONAT thermal-onset instant, ±2 s).
 - Extract frames (~1 fps); digitize the visible fog-interface height vs time —
   edge detection on the fog boundary, or manual click-track if the boundary is
-  ambiguous. Output `results/smoke_layer_measured.csv`.
+  ambiguous. Output `data/processed/smoke_layer_measured.csv`.
 - Overlay against `m2_base_nest20_450` `zint_*`; `SMOKE_FINDINGS.md` + one
   figure + a slice-vs-frame contact sheet.
 - **Do not build any of this until the video is in hand.**

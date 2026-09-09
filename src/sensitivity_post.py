@@ -13,8 +13,8 @@ Inputs (drop returned cluster CSVs here, one dir per chid or flat):
      fds/runs/nest20/candle_fine_nest20_mpi_devc.csv   (2 mm, 150 s)
 
 Outputs:
-  results/sensitivity_bands.csv
-  results/sensitivity_tables.md   (paste-ready)
+  data/processed/sensitivity_bands.csv
+  data/processed/sensitivity_tables.md   (paste-ready)
   console summary
 """
 from __future__ import annotations
@@ -24,8 +24,8 @@ import numpy as np
 import _repro  # noqa: F401
 from p05_validation import load_devc, exp_band, TCS, TMPA
 
-RUNS_DIR = os.environ.get("SWEEP_RUNS_DIR", os.path.join(_repro.HERE, "fds", "runs", "sweep"))
-N20_150 = os.path.join(_repro.HERE, "fds", "runs", "nest20", "candle_fine_nest20_mpi_devc.csv")
+RUNS_DIR = os.environ.get("SWEEP_RUNS_DIR", os.path.join(_repro.FDS_RUNS, "sweep"))
+N20_150 = os.path.join(_repro.FDS_RUNS, "nest20", "candle_fine_nest20_mpi_devc.csv")
 
 SWEEP = {   # key: (chid, hrr_W, rad_fraction, wall)
     "s0": ("s0_base_dx5",         18, 0.25, "exposed"),

@@ -8,7 +8,7 @@ quasi-steady at t = 150 s), with `fds/runs/nest15/` (1.5 mm, t = 65 s) and
 flux and mass channel is dead). **Source:** prescribed 18 W paraffin from
 CONE_FINDINGS. Nothing tuned to the compartment data.
 
-Reproduce: `python p05_validation.py` → `results/p05_three_uncertainty.csv`,
+Reproduce: `python src/p05_validation.py` → `data/processed/p05_three_uncertainty.csv`,
 `figures/p05_T3_convergence.png`, `figures/p05_T1_nearfield.png`.
 
 ---
@@ -63,7 +63,7 @@ column is given alongside.
 | **T10** | doorway mid | +0.2 | +1.1 | +1.5 | +0.2 | +0.2 | ±0.1 | ±0.0 | 0 |
 | **T11** | doorway top | +2.0 | +4.7 | +0.9 | +1.7 | +0.5 | ±0.4 | ±0.6 | +0.5 |
 
-**How the split is computed** (`p05_validation.py :: three_uncertainty`):
+**How the split is computed** (`src/p05_validation.py :: three_uncertainty`):
 
 - **experimental ±1σ** = sample standard deviation of the rise across R1/R2/R3 at
   t = 65 s.
@@ -132,10 +132,10 @@ this configuration.**
   wall-heating timescale. T3 is **not** a standalone model failure.
 
 **Data trace (verified 2026-09-07).** TC_03 (= T3): raw
-`2026-08-27_exponat_R1.txt` col `TC_03`, baseline 25.1 °C, absolute max 64.0 °C
+`data/raw/compartment/2026-08-27_exponat_R1.txt` col `TC_03`, baseline 25.1 °C, absolute max 64.0 °C
 → rise +38.9 °C (R1). EXPONAT_FINDINGS §5 records R1/R2/R3 peak rise
-38.9 / 46.6 / 44.8 → 43.4 ± 4.0 °C. `p05_validation.py` reads the
-ignition-aligned `results/exponat_R*_timeseries.csv` and gets, across R1–R3:
+38.9 / 46.6 / 44.8 → 43.4 ± 4.0 °C. `src/p05_validation.py` reads the
+ignition-aligned `data/processed/exponat_R*_timeseries.csv` and gets, across R1–R3:
 +16.9 ± 2.5 (t = 35 s), +20.2 ± 5.0 (t = 65 s), +30.0 ± 6.6 (t = 150 s),
 +43.5 ± 4.2 (broad peak). The 65 s, 150 s and peak values are a single monotone
 rising sequence on one run and mutually consistent across the chain; the peak

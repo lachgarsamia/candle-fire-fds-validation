@@ -2,13 +2,13 @@
 VALIDATION_FINDINGS.md.
 
 Outputs
-  results/p05_three_uncertainty.csv      three-way split per thermocouple
+  data/processed/p05_three_uncertainty.csv      three-way split per thermocouple
   figures/p05_T3_convergence.png         ceiling-over-fire T3 vs mesh + vs time
   figures/p05_T1_nearfield.png           near-fire gas-T field (rake) -- why T1 fails
 
 Inputs
   fds/runs/{coarse,medium,nest20,nest15}/*_devc.csv   (10 / 5 / 2.0 / 1.5 mm)
-  results/exponat_{R1,R2,R3}_timeseries.csv
+  data/processed/exponat_{R1,R2,R3}_timeseries.csv
 """
 from __future__ import annotations
 import csv
@@ -19,11 +19,12 @@ from scipy.interpolate import griddata
 
 EMBER = "#bf3d10"; COOL = "#2f5766"; INK = "#211c17"
 DSTAR_CM = 1.21
+R = _repro.FDS_RUNS
 MESHES = [   # label, near-fire dx (cm), devc path, colour
-    ("10 mm", 1.00, "fds/runs/coarse/candle_coarse_dx10_devc.csv", "#9c9c9c"),
-    ("5 mm",  0.50, "fds/runs/medium/candle_medium_dx5_devc.csv",  "#e0a53b"),
-    ("2.0 mm", 0.20, "fds/runs/nest20/candle_fine_nest20_mpi_devc.csv", EMBER),
-    ("1.5 mm", 0.15, "fds/runs/nest15/candle_fine_nest15_mpi_devc.csv", "#7a1f6b"),
+    ("10 mm", 1.00, f"{R}/coarse/candle_coarse_dx10_devc.csv", "#9c9c9c"),
+    ("5 mm",  0.50, f"{R}/medium/candle_medium_dx5_devc.csv",  "#e0a53b"),
+    ("2.0 mm", 0.20, f"{R}/nest20/candle_fine_nest20_mpi_devc.csv", EMBER),
+    ("1.5 mm", 0.15, f"{R}/nest15/candle_fine_nest15_mpi_devc.csv", "#7a1f6b"),
 ]
 TCS = ["T1", "T2", "T3", "T5", "T9", "T10", "T11"]
 ECOL = {"T1": "TC_01_C", "T2": "TC_02_C", "T3": "TC_03_C", "T5": "TC_05_C",
@@ -187,8 +188,8 @@ def fig_T1():
     height in the wick column vs on T1's vertical line."""
     xs = [75, 90, 105, 120, 135, 150]
     zs = [20, 35, 50, 70, 100]
-    runs = [("2.0 mm", "fds/runs/nest20/candle_fine_nest20_mpi_devc.csv", EMBER),
-            ("1.5 mm", "fds/runs/nest15/candle_fine_nest15_mpi_devc.csv", "#7a1f6b")]
+    runs = [("2.0 mm", f"{R}/nest20/candle_fine_nest20_mpi_devc.csv", EMBER),
+            ("1.5 mm", f"{R}/nest15/candle_fine_nest15_mpi_devc.csv", "#7a1f6b")]
     fig, (axL, axR) = plt.subplots(1, 2, figsize=(12.4, 5.2))
 
     for lab, path, col in runs:

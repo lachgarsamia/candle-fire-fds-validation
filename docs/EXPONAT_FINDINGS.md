@@ -1,7 +1,7 @@
 # EXPONAT FINDINGS — compartment thermal structure & event timeline
 
-**Phase 02.** Inputs: `2026-08-27_exponat_R1/R2/R3.txt`. Code: `exponat_loader.py`,
-`exponat_analysis.py`. Figures in `figures/`, tables in `results/`.
+**Phase 02.** Inputs: `2026-08-27_exponat_R1/R2/R3.txt`. Code: `src/exponat_loader.py`,
+`src/exponat_analysis.py`. Figures in `figures/`, tables in `data/processed/`.
 
 ---
 
@@ -55,7 +55,7 @@ slow decline that R1's 546 s record misses).
 
 ---
 
-## 2. Parsing (`exponat_loader.py`)
+## 2. Parsing (`src/exponat_loader.py`)
 
 Plain ASCII, comma-delimited, `.`-decimal, CRLF, one `# ExpName:` line then an
 89-column header — `csv.reader` reads it directly. The loader keeps only the live
@@ -118,8 +118,8 @@ FDS comparison:
 
 Numbers are peak temperature **rise above each sensor's pre-ignition baseline**,
 mean ± sample std across R1/R2/R3, each run aligned to its own ignition.
-Full per-run values in `results/exponat_per_run_summary.csv`; repeatability in
-`results/exponat_cross_run_summary.csv`.
+Full per-run values in `data/processed/exponat_per_run_summary.csv`; repeatability in
+`data/processed/exponat_cross_run_summary.csv`.
 
 ### 4.1 Plume / back-wall column
 
@@ -192,7 +192,7 @@ the data supports:
 ## 5. Event timeline & the empirical ignition anchor
 
 `event_number` steps 0→1→2→3→4 at **operator-triggered** times. Full table in
-`results/exponat_events.csv`.
+`data/processed/exponat_events.csv`.
 
 | run | 0→1 | 1→2 | 2→3 | 3→4 | thermal onset (TC_01) | onset vs nearest transition |
 |---|---|---|---|---|---|---|

@@ -535,11 +535,11 @@
     "/Users/samialachgar/Desktop/experiments/figures/exponat_repeatability.png"
   ],
   "csvs": [
-    "/Users/samialachgar/Desktop/experiments/results/exponat_events.csv",
-    "/Users/samialachgar/Desktop/experiments/results/exponat_per_run_summary.csv",
-    "/Users/samialachgar/Desktop/experiments/results/exponat_cross_run_summary.csv",
-    "/Users/samialachgar/Desktop/experiments/results/exponat_R1_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/exponat_R2_timeseries.csv",
-    "/Users/samialachgar/Desktop/experiments/results/exponat_R3_timeseries.csv"
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_events.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_per_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_cross_run_summary.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_R1_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_R2_timeseries.csv",
+    "/Users/samialachgar/Desktop/experiments/data/processed/exponat_R3_timeseries.csv"
   ]
 }

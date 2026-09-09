@@ -22,12 +22,12 @@ import _repro  # noqa: F401
 import matplotlib.pyplot as plt
 
 TCS = ["T1", "T2", "T3", "T5", "T9", "T10", "T11"]
-# FDS probe name -> column name in results/exponat_R1_timeseries.csv
+# FDS probe name -> column name in data/processed/exponat_R1_timeseries.csv
 EXP_COL = {"T1": "TC_01_C", "T2": "TC_02_C", "T3": "TC_03_C", "T5": "TC_05_C",
            "T9": "TC_09_C", "T10": "TC_10_C", "T11": "TC_11_C"}
 TC_Z = {"T1": 0.05, "T2": 0.16, "T3": 0.225, "T5": 0.225, "T9": 0.015, "T10": 0.075, "T11": 0.14}
 HRR_PRESCRIBED_W = 18.0
-RUNS_DIR = os.path.join(_repro.HERE, "fds", "runs")
+RUNS_DIR = _repro.FDS_RUNS
 
 # experimental targets (EXPONAT_FINDINGS.md, R1, ignition-aligned) --------
 EXP_R1 = {
@@ -252,7 +252,7 @@ def main():
     if conv:
         print("\n=== CONVERGENCE (numerical uncertainty only) ===")
         print(json.dumps(conv, indent=2, default=str))
-    print(f"\nfull detail -> results/fds_post_digest.json   figure -> {fig}")
+    print(f"\nfull detail -> data/processed/fds_post_digest.json   figure -> {fig}")
 
 
 if __name__ == "__main__":

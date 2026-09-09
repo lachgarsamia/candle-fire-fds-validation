@@ -96,10 +96,18 @@ central contribution.
 ## Repository layout
 
 ```
-├── *.md                     findings, plans and the settled-facts record
-│   ├── RECON.md              data-format map + reusable-component inventory
-│   ├── CONE_FINDINGS.md      §1 above, in full
-│   ├── EXPONAT_FINDINGS.md   §2 above, in full
+├── README.md
+├── data/
+│   ├── raw/
+│   │   ├── cone/            cone-calorimeter runs + weights.csv (the manual
+│   │   │                    before/after weigh table — the HRR anchor)
+│   │   └── compartment/     compartment runs (2026-08-27_exponat_R{1,2,3}.txt)
+│   └── processed/           derived time series, summaries, digests (CSV/JSON)
+│
+├── docs/
+│   ├── RECON.md                    data-format map + reusable-component inventory
+│   ├── CONE_FINDINGS.md            §1 above, in full
+│   ├── EXPONAT_FINDINGS.md         §2 above, in full
 │   ├── FDS_geometry_reference.md   authoritative compartment geometry
 │   ├── MESH_STUDY_FINDINGS.md      numerical-uncertainty study
 │   ├── VALIDATION_FINDINGS.md      §3 above, in full
@@ -108,24 +116,25 @@ central contribution.
 │   ├── REPORT_SUMMARY.md           2–3 pp supervisor-facing synthesis
 │   └── PROJECT_STATE.md            running settled-facts + status record
 │
-├── cone_loader.py / cone_analysis.py         cone-calorimeter pipeline
-├── exponat_loader.py / exponat_analysis.py   compartment thermocouple pipeline
-├── fds/make_fds.py          single source of truth for every FDS deck
+├── src/
+│   ├── _repro.py                          shared paths + headless-plot setup
+│   ├── cone_loader.py / cone_analysis.py            cone-calorimeter pipeline
+│   ├── exponat_loader.py / exponat_analysis.py      compartment thermocouple pipeline
+│   ├── fds_post.py                        cross-mesh comparison + convergence
+│   ├── p05_validation.py                  three-uncertainty split + validation figures
+│   ├── fig_validation_grid.py             the consolidated 7-thermocouple figure
+│   ├── sensitivity_post.py                M2/M3 per-knob bands + T3 decomposition
+│   └── fog_digitize.py                    laser-sheet smoke-layer extraction
+│
+├── fds/
+│   ├── make_fds.py          single source of truth for every FDS deck
 │   ├── check_nesting.py     verifies embedded-mesh alignment
 │   ├── sweep/               M2/M3 source-, wall- and tracer-sweep decks
 │   ├── cluster/             SLURM batch templates (Pleiades)
 │   └── runs/                deck copies + device CSVs + solver logs
-├── fds_post.py              cross-mesh comparison + convergence assessment
-├── p05_validation.py        the three-uncertainty split + validation figures
-├── fig_validation_grid.py   the consolidated 7-thermocouple figure
-├── sensitivity_post.py      M2/M3 per-knob bands + T3 decomposition
-├── fog_digitize.py          laser-sheet smoke-layer extraction from the video
 │
-├── results/                derived time series, summaries, digests (CSV/JSON)
 ├── figures/                generated figures
-├── weights.csv             the manual weigh table (the HRR anchor)
-└── 2026-08-27_exponat_R*.txt, *_Candle_R*.csv, *_Candles_R*.csv
-                            raw measurement files
+└── media/                  setup photos + smoke-footage frame montages
 ```
 
 ---
@@ -156,23 +165,25 @@ numerical uncertainty (mesh spread), and residual model discrepancy.
 
 ## Reproducing
 
-The analysis scripts expect the FireScope plotting/IO helpers on the path
-(`_repro.py` handles this) and a scientific Python stack (`numpy`, `scipy`,
-`matplotlib`, `imageio`).
+The analysis scripts need a scientific Python stack (`numpy`, `scipy`,
+`matplotlib`, `imageio`) and the FireScope plotting/IO helpers — point
+`FIRESCOPE_SRC` at that checkout if it isn't at the default location. `_repro.py`
+resolves every path from the repo root, so the scripts run from anywhere.
 
 ```bash
-python cone_analysis.py        # -> results/cone_*, figures/cone_*
-python exponat_analysis.py     # -> results/exponat_*, figures/exponat_*
-python fds_post.py             # cross-mesh table + convergence
-python p05_validation.py       # three-uncertainty split + p05 figures
-python fig_validation_grid.py  # the 7-thermocouple figure
+python src/cone_analysis.py        # -> data/processed/cone_*,   figures/cone_*
+python src/exponat_analysis.py     # -> data/processed/exponat_*, figures/exponat_*
+python src/fds_post.py             # cross-mesh table + convergence assessment
+python src/p05_validation.py       # three-uncertainty split + p05 figures
+python src/fig_validation_grid.py  # the 7-thermocouple figure
+python src/sensitivity_post.py     # M2/M3 knob bands + T3 decomposition (needs the sweep runs)
 ```
 
 FDS decks:
 
 ```bash
-cd fds && python make_fds.py --dx 0.005 --t-end 250 --chid candle_medium_dx5
-cd sweep && bash make_sweep.sh          # the M2/M3 sweep set
+python fds/make_fds.py --dx 0.005 --t-end 250 --chid candle_medium_dx5
+cd fds/sweep && bash make_sweep.sh       # the M2/M3 sweep set
 ```
 
 Cluster runs (Pleiades / Bergische Universität Wuppertal) use the templates in
@@ -191,18 +202,18 @@ Cluster runs (Pleiades / Bergische Universität Wuppertal) use the templates in
 | Uncertainty-propagation sweep (M3) | running |
 | Smoke / layer-dynamics validation (M2) | preliminary finding recorded; tracer run + digitization pending |
 
-`PROJECT_STATE.md` is the authoritative running record.
+`docs/PROJECT_STATE.md` is the authoritative running record.
 
 ---
 
 ## Data provenance
 
-* `2026-08-27_exponat_R{1,2,3}.txt` — compartment runs, 40-channel DAQ export
-  (7 thermocouples live).
-* `{25,26,27}082026_*Candle*_R*.csv` — cone-calorimeter runs.
-* `weights.csv` — the manual before/after candle weigh table.
+* `data/raw/compartment/2026-08-27_exponat_R{1,2,3}.txt` — compartment runs,
+  40-channel DAQ export (7 thermocouples live).
+* `data/raw/cone/{25,26,27}082026_*Candle*_R*.csv` — cone-calorimeter runs.
+* `data/raw/cone/weights.csv` — the manual before/after candle weigh table.
 * Laser-sheet smoke footage is stored separately (not in this repository);
-  frame timings and the ignition anchor are recorded in `SMOKE_FINDINGS.md`.
+  frame timings and the ignition anchor are recorded in `docs/SMOKE_FINDINGS.md`.
 
 Fire Dynamics Simulator 6.11.1 (NIST). Cluster: Pleiades, Bergische Universität
 Wuppertal.

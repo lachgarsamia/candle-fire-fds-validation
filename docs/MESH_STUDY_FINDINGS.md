@@ -190,5 +190,5 @@ validation target for this setup at any mesh.
 - Carry the bands from §6.
 - Report **T1 and T2 as a documented model-structure limitation**, quantified by
   the rake, and do **not** tune the source to close the gap.
-- Reproducer: `python p05_validation.py` (writes the table and both figures from
-  `fds/runs/*/` + `results/exponat_R*_timeseries.csv`).
+- Reproducer: `python src/p05_validation.py` (writes the table and both figures from
+  `fds/runs/*/` + `data/processed/exponat_R*_timeseries.csv`).
