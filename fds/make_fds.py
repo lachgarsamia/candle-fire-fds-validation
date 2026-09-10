@@ -128,6 +128,40 @@ WALL_PRESETS = {
         matl="! (no MATL -- ADIABATIC surface)",
         surf="&SURF ID='ACRYLIC_WALL', ADIABATIC=.TRUE., COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
         note="ADIABATIC walls (no thermal mass, no loss) -- brackets out the wall model"),
+
+    # --- M4 wall-hypothesis variants (each = one physical claim about the RIG,
+    #     NOT a knob tuned to hit a T3 target). See docs/SENSITIVITY_FINDINGS.
+    "pmma-ir": dict(   # V1
+        matl="&MATL ID='PMMA', CONDUCTIVITY=0.19, SPECIFIC_HEAT=1.47, DENSITY=1180.0, EMISSIVITY=0.85 /",
+        surf=f"&SURF ID='ACRYLIC_WALL', MATL_ID='PMMA', THICKNESS={WALL_TH:.3f}, BACKING='EXPOSED',\n"
+             f"      COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        note="cast-PMMA hemispherical emissivity ~0.85 (datasheet low end) + near-IR "
+             "semi-transparency: not all hot-layer radiation is absorbed at the wall surface"),
+    "thin-ceiling": dict(   # V2 -- photo-supported
+        matl="&MATL ID='PMMA', CONDUCTIVITY=0.19, SPECIFIC_HEAT=1.47, DENSITY=1180.0, EMISSIVITY=0.90 /\n"
+             "    &SURF ID='ROOM_CEILING', MATL_ID='PMMA', THICKNESS=0.004, BACKING='INSULATED',\n"
+             "          COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        surf=f"&SURF ID='ACRYLIC_WALL', MATL_ID='PMMA', THICKNESS={WALL_TH:.3f}, BACKING='EXPOSED',\n"
+             f"      COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        room_surf="ROOM_CEILING",
+        note="setup photo: the inner-room ceiling is a ~4 mm acrylic sheet backed by "
+             "stagnant plenum air (a near-insulator with negligible heat capacity), "
+             "not a solid 10 mm slab against a fixed-temperature reservoir"),
+    "thin-all": dict(   # V3
+        matl="&MATL ID='PMMA', CONDUCTIVITY=0.19, SPECIFIC_HEAT=1.47, DENSITY=1180.0, EMISSIVITY=0.90 /\n"
+             "    &SURF ID='ROOM_CEILING', MATL_ID='PMMA', THICKNESS=0.004, BACKING='INSULATED',\n"
+             "          COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        surf="&SURF ID='ACRYLIC_WALL', MATL_ID='PMMA', THICKNESS=0.004, BACKING='EXPOSED',\n"
+             "      COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        room_surf="ROOM_CEILING",
+        note="the whole rig is thin-sheet acrylic construction (~4 mm), inner ceiling "
+             "air-backed, outer box lab-backed -- not 10 mm slabs"),
+    "contact": dict(   # V4 -- explicit bracket
+        matl="&MATL ID='PMMA', CONDUCTIVITY=0.10, SPECIFIC_HEAT=1.47, DENSITY=1180.0, EMISSIVITY=0.90 /",
+        surf=f"&SURF ID='ACRYLIC_WALL', MATL_ID='PMMA', THICKNESS={WALL_TH:.3f}, BACKING='EXPOSED',\n"
+             f"      COLOR='SKY BLUE', TRANSPARENCY=0.2 /",
+        note="assembled from taped/bracketed acrylic panels, not monolithic -- joint "
+             "contact resistance lumped into a reduced effective conductivity (bracket, not measured)"),
 }
 
 
@@ -324,6 +358,7 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
     cells_across = Ds / near_dx
     core_xb = _nest_geometry(fine_dx)[2] if fine_dx else CORE_XB_NOMINAL
     wp = WALL_PRESETS[wall]
+    room_surf = wp.get("room_surf", "ACRYLIC_WALL")   # inner-room ceiling + doorway wall
 
     # provenance -- every non-baseline knob echoed into the deck header so a swept
     # deck says what it is without cross-referencing the batch script.
@@ -516,8 +551,8 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
     !  (room spans the full box depth, so its side walls ARE the box side walls;
     !   its back wall IS the box XMIN face -- only ceiling + doorway wall are OBSTs)
     ! ============================================================
-    &OBST XB=0.000,{rx1:.3f}, {y0:.3f},{y1:.3f}, {rz:.3f},{rz1:.3f}, SURF_ID='ACRYLIC_WALL', TRANSPARENCY=0.2 / room ceiling
-    &OBST XB={dx0:.3f},{dwall1:.3f}, {y0:.3f},{y1:.3f}, 0.000,{rz:.3f}, SURF_ID='ACRYLIC_WALL', TRANSPARENCY=0.2 / doorway wall
+    &OBST XB=0.000,{rx1:.3f}, {y0:.3f},{y1:.3f}, {rz:.3f},{rz1:.3f}, SURF_ID='{room_surf}', TRANSPARENCY=0.2 / room ceiling
+    &OBST XB={dx0:.3f},{dwall1:.3f}, {y0:.3f},{y1:.3f}, 0.000,{rz:.3f}, SURF_ID='{room_surf}', TRANSPARENCY=0.2 / doorway wall
     &HOLE XB={dx0-dx:.3f},{dwall1+dx:.3f}, {dy0:.3f},{dy1:.3f}, -0.001,{dh:.3f} / doorway 0.05 w x 0.15 h, depth-centred
 
     ! ============================================================
