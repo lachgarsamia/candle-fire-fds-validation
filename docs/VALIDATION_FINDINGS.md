@@ -23,22 +23,30 @@ experimental uncertainty. Two limits emerge at this scale, and they are
 | | what FDS does | why |
 |---|---|---|
 | **Far-field ceiling & doorway** (T5, T9, T10, T11) | within ~1–2 °C, correct stratification order and sign | model has physical content here; numerically converged |
-| **Ceiling directly over the fire** (T3) | right structure (localized hot spot, T3 ≫ T5); **agrees with experiment at matched simulated time** (FDS +19.9 °C vs measured +20.2 ± 5.0 °C at t = 65 s); best resolved-limit estimate +18 ± 3 °C | not a standalone failure — see the consolidated T3 statement below |
+| **Ceiling directly over the fire** (T3) | right structure (localized hot spot, T3 ≫ T5); **agrees at matched simulated time** (FDS +19.9 vs measured +20.2 ± 5.0 °C at 65 s); plateaus at +16 °C while the measurement climbs to +43 °C | **wall thermal-boundary model** — modelled 10 mm PMMA is ~2× too strong a heat sink (M3: run length and back-face condition ruled out; adiabatic bracket → +60 °C) |
 | **In-flame column** (T1, T2) | +0.4 / +1.2 °C vs measured +49 / +13 (t = 65 s), +107 / +35 (peak); does not improve — *worsens* — with refinement | **structural** — a prescribed-HRR LES cannot place the luminous reaction zone that a thermocouple 3 cm from the wick sits in; no achievable mesh fixes it |
 
-**Consolidated T3 statement (used identically in MESH_STUDY_FINDINGS.md §4):**
+**Consolidated T3 statement (used identically in MESH_STUDY_FINDINGS.md §4;
+updated 2026-09-10 after the M3 sweep — see SENSITIVITY_FINDINGS §2):**
 T3 agrees with experiment at matched simulated time (FDS +19.9 °C vs measured
 +20.2 ± 5.0 °C at t = 65 s). The residual to the experimental broad peak
-(+43 °C, reached ~300–450 s after ignition across R1–R3) is dominated by the
-wall-thermal-mass timescale that the 150 s runs do not capture, with a secondary
-D\*/δx < 10 under-resolution contribution — the two are not cleanly separable
-with the runs in hand. T3 is **not** a standalone model failure.
+(+43 °C, reached ~300–450 s after ignition across R1–R3) is a **wall
+thermal-boundary model discrepancy**: the modelled compartment wraps the box in
+10 mm opaque cast PMMA, which is ~2× too strong a heat sink and pins T3 at
++16 °C. The M3 sweep rules out the two alternatives — **run length** (the 2 mm
+run held T3 at +16 from 60 s to 410 s) and **wall back-face condition** (exposed
+≡ insulated, the heat never penetrates the slab). Removing the wall heat sink
+entirely (adiabatic) sends T3 to +60 °C and climbing; the measurement sits
+between, near the weak-sink end. T3 is **not** a standalone model failure and is
+**not** a numerical or run-length limit — it is a bracketed wall-model
+uncertainty, T3 ∈ [+16, +60] °C with the truth near the low-sink end.
 
 **Scope boundary.** Fine-mesh comparison is limited to **t ≤ 65 s** by wall-clock
-(the 1.5 mm run's 24 h limit; the 2.0 mm run reaches 150 s). Far-field and T3
-are compared at matched simulated time, which is methodologically correct, but
-the several-hundred-second wall-heating regime in which the experiment reaches
-its broad peak is **not tested** by any fine-mesh run.
+(the 1.5 mm run's 24 h limit; the 2.0 mm run reaches 150 s; the M3 2 mm run
+`m2_base_nest20_450` reached 410 s). The several-hundred-second wall-heating
+regime is now probed by the 2 mm and 5 mm M3 runs (§SENSITIVITY_FINDINGS), which
+show T3 is flat there — the experiment's continued rise is the wall-model gap
+above, not an untested transient.
 
 Separating the numerical limit (T3) from the structural one (T1/T2) is the
 study's central result. They look similar in a raw sim-vs-experiment table — both
@@ -123,13 +131,23 @@ this configuration.**
   monotone sequence, so no formal GCI. Best estimate **+18 ± 3 °C** at the
   resolved limit, from the two fine meshes.
 - **T3 agrees with experiment at matched simulated time** (FDS +19.9 °C vs
-  measured +20.2 ± 5.0 °C at t = 65 s). The residual to the experimental broad
-  peak (+43 °C, reached ~300–450 s after ignition across R1–R3) is dominated by
-  the wall-thermal-mass timescale the 150 s runs do not capture, with a
-  secondary D\*/δx < 10 under-resolution contribution — the two are not cleanly
-  separable with the runs in hand. The 2.0 mm run reaches its own quasi-steady
-  (T3 flat at +16 °C from t = 65 to 150 s) well before the experiment's
-  wall-heating timescale. T3 is **not** a standalone model failure.
+  measured +20.2 ± 5.0 °C at t = 65 s).
+- **The residual to the +43 °C broad peak is a wall thermal-boundary model
+  error** (M3 sweep, 2026-09-10 — SENSITIVITY_FINDINGS §2, figure
+  `figures/m3_T3_wall_bracket.png`):
+  - *run length ruled out* — the 2 mm run `m2_base_nest20_450` held T3 at
+    +16.5 → +15.7 °C from t = 60 s to t = 410 s;
+  - *back-face condition ruled out* — exposed ≡ insulated (heat penetrates only
+    ~6 mm of the 10 mm slab in 350 s);
+  - *the wall heat sink is the lever* — adiabatic walls send T3 to +60 °C and
+    climbing; the measurement (+30–43 °C) sits between the PMMA and adiabatic
+    curves, near the weak-sink end.
+  - The modelled 10 mm opaque cast PMMA is **~2× too strong a heat sink**.
+    Likely causes (not separated): acrylic modelled as grey-opaque when it is
+    semi-IR-transparent; an air gap above the ceiling slab; imperfect panel
+    contact. T3 ∈ **[+16 (full PMMA), +60 (no sink)] °C**, truth near the low end.
+- T3 is **not** a standalone model failure and **not** a numerical / run-length
+  limit — it is a bracketed wall-model uncertainty.
 
 **Data trace (verified 2026-09-07).** TC_03 (= T3): raw
 `data/raw/compartment/2026-08-27_exponat_R1.txt` col `TC_03`, baseline 25.1 °C, absolute max 64.0 °C
@@ -189,15 +207,17 @@ figure matches EXPONAT_FINDINGS to within rounding. **No discrepancy.**
 
 ---
 
-## 7. Future work: smoke
+## 7. Smoke — the fog-analogue tracer (M3, SMOKE_FINDINGS + SENSITIVITY_FINDINGS §4)
 
-The experiment's glycerin-fog smoke visualisation was recorded on video only —
-no calibrated obscuration or soot channel. The FDS deck carries a soot yield
-(0.008, paraffin) and writes a `HRRPUV` + `SOOT` slice, so a **qualitative**
-layer-height / descent-rate comparison against the video is possible. It is
-listed as future work and is **not** a reason to delay this write-up: the
-temperature and vent validation above stands on its own, and a qualitative smoke
-check cannot change the numerical-vs-structural conclusion.
+The glycerin fog was recorded on video only (no calibrated obscuration channel).
+A passive tracer released at the candle cup (`s7_tracer`), compared for
+**transport shape and timing only**, reproduces the video: a gradual room-fill
+over minutes, near-uniform by ~250 s (`tr_upper/tr_lower` → 1.3), almost nothing
+reaching the plenum — no sharp descending interface. In the video's observable
+window (fog visible from t ≈ +150 s) the model and the footage agree. Both the
+tracer and the thermocouples describe the same weak, slow, near-uniform fill:
+**the FDS compartment *flow* model is sound** (the T3 issue in §4 is a *thermal
+boundary* problem, not a flow problem).
 
 ---
 
@@ -205,17 +225,17 @@ check cannot change the numerical-vs-structural conclusion.
 
 > FDS reproduces the compartment-scale thermal and vent behaviour of an 18 W
 > candle fire — far-field ceiling and doorway temperatures within experimental
-> uncertainty (residuals ≤ 1 °C), and the correct localized-hot-layer structure
-> over the fire. Fine-mesh comparison is bounded to t ≤ 65 s by wall-clock, so
-> the several-hundred-second wall-heating regime is not tested. Within that
-> window: (a) the ceiling temperature directly over the fire (T3) agrees with
-> the measurement at matched simulated time (+19.9 vs +20.2 ± 5.0 °C); the gap
-> to the experimental broad peak (+43 °C) is dominated by the wall-thermal-mass
-> timescale the runs do not reach, with a secondary contribution from a mesh
-> (D\*/δx ≈ 10–16, ≈ 90 M cells) that is computationally impractical — a ±3 °C
-> numerical band is carried. (b) An in-flame thermocouple (T1, +107 °C measured)
-> cannot be reproduced by a prescribed-HRR LES at any resolution — the near-fire
-> rake shows the modelled plume is a narrow column over the wick that gets
-> *narrower* with refinement, never reaching the probe 3 cm away. Separating the
-> numerical limit from the structural one — rather than tuning the source until
-> the near-fire numbers match — is the contribution.
+> uncertainty (residuals ≤ 1 °C), the correct localized-hot-layer structure over
+> the fire, and (from a passive tracer) the slow near-uniform fog fill the video
+> shows. Two limits remain, and they are different kinds. **(a) T3** — the
+> ceiling directly over the fire — agrees at matched simulated time (+19.9 vs
+> +20.2 ± 5.0 °C) but plateaus at +16 °C while the measurement climbs to +43 °C.
+> The M3 sweep localised this to the **wall thermal boundary**: run length and
+> the wall back-face condition are ruled out; the modelled 10 mm opaque PMMA is
+> ~2× too strong a heat sink (adiabatic walls overshoot to +60 °C, the
+> measurement sits between). **(b) T1/T2** — in-flame — cannot be reproduced by a
+> prescribed-HRR LES at any resolution; the near-fire rake shows the modelled
+> plume is a narrow column over the wick that *narrows* with refinement, never
+> reaching the probe. Separating the wall-model limit and the structural limit —
+> rather than tuning the source until the near-fire numbers match — is the
+> contribution.

@@ -68,7 +68,7 @@ study (10 / 5 / 2.0 / 1.5 mm) frames the numerical uncertainty.
 | region | outcome | nature of the limit |
 |---|---|---|
 | **Far-field ceiling & doorway** (4 sensors) | validated — residual ≤ 1 °C after experimental + numerical uncertainty; correct stratification | model has physical content; numerically converged |
-| **Ceiling over the fire** (T3) | agrees at matched simulated time (+19.9 vs +20.2 ± 5.0 °C at 65 s); gap to the +43 °C broad peak is dominated by the wall-thermal-mass timescale the runs don't reach, with a secondary D\*/δx < 10 contribution | **numerical / run-length** — a converged mesh (D\*/δx ≈ 10–16, ≈ 90 M cells) is impractical |
+| **Ceiling over the fire** (T3) | agrees at matched simulated time (+19.9 vs +20.2 ± 5.0 °C at 65 s); then plateaus at +16 °C while the measurement climbs to +43 °C | **wall thermal-boundary model** — the M3 sweep ruled out run length (2 mm run flat to 410 s) and the back-face condition; the modelled 10 mm opaque acrylic is ~2× too strong a heat sink (adiabatic walls → +60 °C; measurement sits between) |
 | **In-flame column** (T1, T2) | +0.4 / +1.2 °C vs +49 / +13 °C measured; *worsens* with mesh refinement | **structural** — a prescribed-HRR LES has no luminous reaction zone; a thermocouple 3 cm from the wick is outside what the model can represent at any resolution |
 
 The near-fire rake shows why: the modelled plume is a narrow hot column locked
@@ -77,19 +77,21 @@ probe. Separating this **structural** limit from the **numerical** one at T3 —
 rather than tuning the source until the near-fire numbers agree — is the study's
 central contribution.
 
-### 4 · In progress (M2 / M3)
+### 4 · Uncertainty propagation and smoke (M2 / M3)
 
-* **Uncertainty propagation** — a source/wall sweep (HRR 15/18/21 W, radiative
-  fraction 0.20/0.25/0.35, wall boundary exposed / insulated / adiabatic) that
-  turns the "± 15–20 %" statement into a per-sensor °C band and decomposes the
-  T3 residual.
-* **Smoke visualisation** — the laser-sheet fog footage. First finding: **no
-  sharp descending interface formed**; the fog filled the compartment gradually
-  over minutes, consistent with the weak buoyant circulation of an 18 W fire in
-  a sealed box, and corroborating the thermocouple picture (localized layer,
-  weak doorway flow, no steady state). The glycerin fog is a *seeded passive
-  tracer*, so the FDS comparison is transport shape and timing only — never
-  concentration.
+* **Source uncertainty is small.** A sweep over HRR (15/18/21 W) and radiative
+  fraction (0.20–0.35) moves **no sensor by more than ~2.5 °C** — the ± 15–20 %
+  cone characterisation is not where the T3 gap comes from.
+* **The T3 residual is the wall model.** A wall sweep (exposed / insulated /
+  adiabatic) plus a 2 mm run to 410 s show the gap to +43 °C is **not** run
+  length and **not** the wall back-face condition — the modelled 10 mm opaque
+  acrylic is ~2× too strong a heat sink. T3 ∈ [+16 (full PMMA), +60 (no sink)];
+  the measurement sits near the weak-sink end.
+* **Smoke.** A passive tracer released at the candle cup reproduces the video:
+  gradual room-fill over minutes, near-uniform by ~250 s, weak doorway flow, no
+  sharp descending interface. The FDS compartment *flow* model is sound. (The
+  glycerin fog is a seeded passive tracer — the comparison is transport shape
+  and timing only, never concentration.)
 
 ---
 
@@ -111,7 +113,8 @@ central contribution.
 │   ├── FDS_geometry_reference.md   authoritative compartment geometry
 │   ├── MESH_STUDY_FINDINGS.md      numerical-uncertainty study
 │   ├── VALIDATION_FINDINGS.md      §3 above, in full
-│   ├── SMOKE_FINDINGS.md           §4, smoke (preliminary)
+│   ├── SENSITIVITY_FINDINGS.md     §4, the M3 uncertainty sweep
+│   ├── SMOKE_FINDINGS.md           §4, smoke / fog-analogue tracer
 │   ├── M2_M3_PLAN.md               forward roadmap
 │   ├── REPORT_SUMMARY.md           2–3 pp supervisor-facing synthesis
 │   └── PROJECT_STATE.md            running settled-facts + status record
@@ -123,7 +126,8 @@ central contribution.
 │   ├── fds_post.py                        cross-mesh comparison + convergence
 │   ├── p05_validation.py                  three-uncertainty split + validation figures
 │   ├── fig_validation_grid.py             the consolidated 7-thermocouple figure
-│   ├── sensitivity_post.py                M2/M3 per-knob bands + T3 decomposition
+│   ├── sensitivity_post.py                M3 per-knob bands + T3 decomposition
+│   ├── m3_figs.py                         T3 wall-bracket + tracer-fill figures
 │   └── fog_digitize.py                    laser-sheet smoke-layer extraction
 │
 ├── fds/
@@ -199,8 +203,8 @@ Cluster runs (Pleiades / Bergische Universität Wuppertal) use the templates in
 | Compartment thermocouple analysis (P02) | complete |
 | FDS baseline + mesh study (P03–P04) | complete |
 | Validation + three-uncertainty split (P05) | complete |
-| Uncertainty-propagation sweep (M3) | running |
-| Smoke / layer-dynamics validation (M2) | preliminary finding recorded; tracer run + digitization pending |
+| Uncertainty-propagation sweep (M3) | complete — T3 residual localised to the wall heat-sink model |
+| Smoke / fog-analogue tracer (M2) | complete — FDS reproduces the slow near-uniform fill; frame-level digitization optional |
 
 `docs/PROJECT_STATE.md` is the authoritative running record.
 

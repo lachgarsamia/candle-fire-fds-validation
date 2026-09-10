@@ -1,9 +1,8 @@
 # SMOKE_FINDINGS — M2, compartment fog visualisation
 
-**Status: PRELIMINARY.** The qualitative video finding (§3) is a real result and
-stands on its own. The quantitative tracer↔fog transport comparison (§5) is
-pending the passive-tracer FDS run (`s7_tracer`) and validation of the video
-digitization (`src/fog_digitize.py`).
+**Status: COMPLETE (2026-09-10).** The qualitative video finding (§3) and the
+passive-tracer transport comparison (§5) are both done. Frame-level digitization
+(`src/fog_digitize.py`) is optional and not required for the conclusion.
 
 ---
 
@@ -97,29 +96,34 @@ spatially localized** compartment fire.
 
 ---
 
-## 5. Pending — tracer↔fog transport comparison
+## 5. Tracer↔fog transport comparison — DONE (2026-09-10)
 
-FDS run `fds/sweep/s7_tracer.fds` (5 mm, 8-rank, baseline source, T_END 350 s,
-`--tracer`): passive tracer released from the **candle-cup side faces** (a
-standalone `&SURF FOG_SRC`, `MASS_FLUX = 1e-5 kg/m²/s`, ramped with ignition
-`TAU_MF = -25`) and entrained into the plume. **Not** on the burner vent — a
-species `MASS_FLUX` on a `HRRPUA` surface makes FDS scale it off the heat
-release (parse-check 2026-09-08 saw `TRACER Mass Flux 1.5e10 kg/s/m²` for both
-the unindexed and indexed forms). Probes: `tr_{fire,mid,door}_z{03..22}` column
-profiles, `tr_{room,upper,lower,plenum}mean` volume means, centre-plane
-`MASS FRACTION(TRACER)` slice.
+FDS run `s7_tracer` (5 mm, 8-rank, baseline source, T_END 350 s, `--tracer`):
+passive tracer from the **candle-cup side faces** (standalone `&SURF FOG_SRC`,
+`MASS_FLUX = 1e-5 kg/m²/s`, ramped with ignition; **not** on the burner vent — a
+species `MASS_FLUX` on a `HRRPUA` surface makes FDS scale it off the heat release,
+`TRACER Mass Flux 1.5e10 kg/s/m²`, both the unindexed and indexed forms). Probes:
+`tr_{fire,mid,door}_z{03..22}` column profiles, `tr_{room,upper,lower,plenum}mean`
+volume means. → **figure `figures/m3_tracer_fill.png`**.
 
-**Comparison (shape + timing only):**
-1. **Time-to-fill** — does the modelled tracer take **minutes** to fill the room
-   like the fog, or ~30 s like the thermal layer? (This is the key test of
-   whether the fog tracks temperature.)
-2. **Spatial accumulation pattern** — uniform fill vs descending front; room vs
-   plenum partition (`tr_roommean` vs `tr_plenummean`).
-3. **Absence of a sharp interface** — does `tr_upper/tr_lower` stay near 1
-   (mixed) rather than showing a clean two-layer split?
+| test | model result | video |
+|---|---|---|
+| **time-to-fill** | gradual over minutes (`tr_roommean` climbs steadily on a log scale through 350 s) | fog first visible +150 s, builds over the following 5–10 min |
+| **stratification** | sharp early peak (`tr_upper/tr_lower` ≈ 22 at t ≈ 30 s while the tracer is still in the ceiling layer), decaying to **≈ 1.3 by t ≈ 100 s** — near-uniform | no sharp descending interface; gradual room-fill |
+| **room vs plenum** | plenum lags ~50 s and stays 1–2 orders below the room throughout | strong fog structure stays near the fire / doorway, weak in the plenum |
 
-`zint_*` goes in the **same figure as a separate, labelled thermal-reference
-line** — not the comparison target.
+**Verdict: the model reproduces the fog transport.** In the video's observable
+window (fog visible from t ≈ +150 s) the model says *near-uniform, still slowly
+filling* — which is exactly what the footage shows. The model's early
+stratification transient (t < 60 s) is below the video's detection threshold and
+cannot be confirmed either way — flag it as an assumption, not a match.
 
-Do not build §5 until `s7_tracer` completes **and** `src/fog_digitize.py` output is
-validated against hand-picked frames.
+Both the tracer and the thermocouples (P02) describe the same weak, slow,
+near-uniform fill: **the FDS compartment flow model is sound.** (The T3 issue —
+SENSITIVITY_FINDINGS §2 — is a wall *thermal boundary* problem, not a flow
+problem.)
+
+**Optional, not done:** frame-level digitization of a fog-front height with
+`src/fog_digitize.py`. The qualitative comparison above already settles the
+question; a digitized curve would add precision the unrecorded fog injection rate
+does not justify.

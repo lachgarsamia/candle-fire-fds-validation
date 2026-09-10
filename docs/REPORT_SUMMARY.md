@@ -17,10 +17,13 @@ localized directly over the fire, and a weak but clearly ordered doorway
 stratification. An FDS model built entirely from the cone source term and the
 measured geometry — with nothing tuned to the compartment data — reproduces the
 far-field ceiling and doorway temperatures to within about 1 °C and captures the
-localized-hot-layer structure. Two discrepancies near the fire remain, and the
-mesh study shows they are *different* problems: the ceiling temperature over the
-fire is limited by affordable grid resolution, while the in-flame thermocouple is
-outside what a prescribed-heat-release model can represent at any resolution.
+localized-hot-layer structure, and — from a passive tracer — the slow
+near-uniform fog fill seen in the smoke video. Two discrepancies near the fire
+remain, and they are *different* problems: the ceiling temperature over the fire
+is a **wall thermal-boundary model** limit (the modelled acrylic is about twice
+too strong a heat sink; the M3 sweep ruled out run length and grid), while the
+in-flame thermocouple is outside what a prescribed-heat-release model can
+represent at any resolution.
 
 ---
 
@@ -94,16 +97,16 @@ experimental scatter and the mesh-to-mesh spread, the unexplained residual is
 stratification order and sign. The coarsest mesh fails here only because it
 cannot sustain the plume at all.
 
-**Ceiling directly over the fire: agrees at matched time, with a carried
-numerical band.** At t = 65 s the model gives +19.9 °C against a measured
-+20.2 ± 5.0 °C. The measurement then continues to climb to a broad peak of about
-+43 °C several hundred seconds later, as the acrylic walls store heat over a
-timescale the 150 s runs do not reach; a smaller part of that gap is that even
-the finest mesh is below the resolution FDS recommends for a fire this small
-(which would need on the order of 90 million cells). These two contributions
-cannot be cleanly separated with the runs in hand, so a **±3 °C numerical band**
-is carried and this sensor is *not* treated as a standalone model failure.
-→ *see* `figures/p05_T3_convergence.png`.
+**Ceiling directly over the fire: agrees at matched time; the residual is the
+wall heat-sink model.** At t = 65 s the model gives +19.9 °C against a measured
++20.2 ± 5.0 °C. The model then plateaus at +16 °C while the measurement climbs to
+a broad peak of about +43 °C. The M3 sweep (below) localised that residual: it is
+**not** run length (a 2 mm run held T3 flat to 410 s) and **not** the wall
+back-face condition (exposed ≡ insulated) — it is that the modelled 10 mm opaque
+acrylic is about twice too strong a heat sink. With the wall heat sink removed
+(adiabatic) T3 overshoots to +60 °C; the measurement sits between. This is a
+bracketed **wall thermal-boundary model uncertainty**, not a numerical limit.
+→ *see* `figures/p05_T3_convergence.png`, `figures/m3_T3_wall_bracket.png`.
 
 **In-flame column (two sensors): a structural limit of the model.** The model
 gives +0.4 to +1.2 °C where the experiment measures +49 °C (at 65 s) rising to
@@ -127,20 +130,18 @@ contribution.
 
 ## 4. Future work
 
-- **Smoke comparison.** The glycerin-fog visualisation was recorded on video
-  only, with no calibrated obscuration channel. The deck already writes soot and
-  heat-release-rate slices, so a qualitative layer-height and descent-rate
-  comparison against the video is feasible. It cannot change the
-  numerical-versus-structural conclusion and is not a reason to hold the
-  write-up.
+- **Smoke comparison — done (M3).** A passive tracer released at the cup
+  reproduces the video's slow near-uniform fog fill (near-uniform by ~250 s, weak
+  doorway flow); the FDS compartment *flow* model is sound. See SMOKE_FINDINGS
+  and SENSITIVITY_FINDINGS §4.
+- **Wall thermal boundary.** The M3 sweep localised the T3 residual to the wall
+  heat-sink model but did not separate its causes (IR-transparent acrylic
+  modelled as opaque; air gap above the ceiling slab; panel contact). A
+  wall-property / ceiling-construction sweep would close this — the natural next
+  step for T3.
 - **1.5 mm run to quasi-steady.** The finest mesh stopped at 65 s. A restart to
-  150 s (or longer) would tighten the T3 numerical band and give a genuine
-  four-point resolution ladder at a common time; the conclusions do not depend
-  on it.
-- **Longer runs into the wall-heating regime.** Reaching the experiment's
-  several-hundred-second broad peak would let the wall-thermal-mass and
-  resolution contributions to the T3 gap be separated rather than bounded
-  together.
+  150 s would tighten the T3 numerical band and give a genuine four-point
+  resolution ladder at a common time; the conclusions do not depend on it.
 - **A pyrolysis source instead of prescribed heat release.** Modelling the wax
   evaporation and a finite-rate flame would be the only route to representing
   the reaction zone that the in-flame thermocouples sit in — a substantially

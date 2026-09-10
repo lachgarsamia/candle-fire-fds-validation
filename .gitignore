@@ -34,3 +34,6 @@ media/frames/*
 # scratch
 scratchpad/
 *.tmp
+
+# bulky FDS solver step-logs under the M3 sweep (data is in the CSVs)
+fds/runs/sweep/**/*.out

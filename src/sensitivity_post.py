@@ -38,7 +38,7 @@ SWEEP = {   # key: (chid, hrr_W, rad_fraction, wall)
     "m2": ("m2_base_nest20_450",  18, 0.25, "exposed"),
 }
 HRR_BAND_W = 3.0                 # +-3 W  ==  the +-15-20% cone source band about 18 W
-TIMES = (150.0, 250.0, 450.0)
+TIMES = (150.0, 250.0, 350.0)
 
 
 def _load(chid):
@@ -144,21 +144,21 @@ def main():
 
     # ---------- 3. T3 resolution vs wall decomposition ----------
     md.append("## 3. T3 — resolution vs wall vs run-length (the P05 hedge, resolved)\n")
-    md.append("| source | T3 @150 s | T3 @450 s | note |")
+    md.append("| source | T3 @150 s | T3 @350 s | note |")
     md.append("|--------|-----------|-----------|------|")
     def r3(dev, tau):
         v = rise(dev, "T3", tau); return "--" if v is None else f"{v:+.1f}"
     md.append(f"| measured (R1–R3) | {exp_band('T3',150)[0]:+.1f} | {exp_band('T3',None)[0]:+.1f} (peak) | broad peak ~300–450 s |")
     md.append(f"| P04 nest20 (2 mm, 150 s) | {r3(D['n20_150'],150)} | -- | prior baseline |")
-    md.append(f"| m2_base_nest20_450 (2 mm) | {r3(D['m2'],150)} | {r3(D['m2'],450)} | **does T3 climb 150→450 s?** |")
-    md.append(f"| s0 (5 mm, exposed) | {r3(D['s0'],150)} | {r3(D['s0'],450)} | coarser mesh |")
-    md.append(f"| s5 (5 mm, insulated) | {r3(D['s5'],150)} | {r3(D['s5'],450)} | no loss to lab |")
-    md.append(f"| s6 (5 mm, adiabatic) | {r3(D['s6'],150)} | {r3(D['s6'],450)} | no wall thermal mass (upper bound) |")
+    md.append(f"| m2_base_nest20_450 (2 mm) | {r3(D['m2'],150)} | {r3(D['m2'],350)} | **does T3 climb 150→350 s?** |")
+    md.append(f"| s0 (5 mm, exposed) | {r3(D['s0'],150)} | {r3(D['s0'],350)} | coarser mesh |")
+    md.append(f"| s5 (5 mm, insulated) | {r3(D['s5'],150)} | {r3(D['s5'],350)} | no loss to lab |")
+    md.append(f"| s6 (5 mm, adiabatic) | {r3(D['s6'],150)} | {r3(D['s6'],350)} | no wall thermal mass (upper bound) |")
     md.append("")
-    m2_150, m2_450 = rise(D["m2"], "T3", 150.0), rise(D["m2"], "T3", 450.0)
+    m2_150, m2_450 = rise(D["m2"], "T3", 150.0), rise(D["m2"], "T3", 350.0)
     if m2_150 is not None and m2_450 is not None:
         climb = m2_450 - m2_150
-        md.append(f"**Run-length effect (2 mm): T3 moves {climb:+.1f} °C from 150 → 450 s.** "
+        md.append(f"**Run-length effect (2 mm): T3 moves {climb:+.1f} °C from 150 → 350 s.** "
                   + ("Confirms the wall-thermal-mass explanation." if climb > 5
                      else "Does NOT support run-length as the main cause — revisit the P05 wording."))
     if D["s0"] and D["s6"]:

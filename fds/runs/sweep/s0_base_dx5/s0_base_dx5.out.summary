@@ -1,0 +1,53 @@
+
+ Fire Dynamics Simulator
+
+ Current Date     : September  9, 2026  09:21:31
+ Revision         : FDS-6.11.1-0-gff928db-HEAD
+ Revision Date    : Thu Jul 9 17:24:07 2026 -0400
+ Compiler         : Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.1.1 Build 20250418
+ Compilation Date : Sep 01, 2026 14:31:03
+
+ Number of MPI Processes:  8
+
+ MPI version: 3.1
+ MPI library version: Intel(R) MPI Library 2021.15 for Linux* OS
+
+ Hypre library version: v3.0.0
+ Sundials library version: v7.5.0
+
+ Job TITLE        : candle compartment -- 1 candle(s), near-fire dx=5.0 mm, SEALED box
+ Job ID string    : s0_base_dx5
+
+
+ Grid Dimensions, Mesh     1
+
+   Cells in the X Direction            50
+   Cells in the Y Direction            60
+   Cells in the Z Direction            50
+   Number of Grid Cells            150000
+
+
+ Physical Dimensions, Mesh     1
+
+   Length (m)                       0.250
+   Width  (m)                       0.300
+   Height (m)                       0.250
+
+ Grid Dimensions, Mesh     2
+
+   Cells in the X Direction            50
+   Cells in the Y Direction            60
+   Cells in the Z Direction            50
+   Number of Grid Cells            150000
+
+
+ Physical Dimensions, Mesh     2
+
+...[per-step CFL/divergence blocks omitted]...
+       Time Step    10000   September  9, 2026  10:51:28
+       Time Step    20000   September  9, 2026  12:21:21
+       Time Step    30000   September  9, 2026  13:50:40
+       Time Step    40000   September  9, 2026  15:19:52
+       Time Step    50000   September  9, 2026  16:49:07
+       Time Step    60000   September  9, 2026  18:18:03
+STOP: FDS completed successfully (CHID: s0_base_dx5)

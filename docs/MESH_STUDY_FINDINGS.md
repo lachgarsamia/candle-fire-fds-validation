@@ -92,13 +92,16 @@ meaningful at D\*/δx = 2–8. **Best estimate: ΔT₃ ≈ +18 ± 3 °C** at the
 limit, from the 2 mm and 1.5 mm runs.
 → **Figure:** `figures/p05_T3_convergence.png`.
 
-**Consolidated T3 statement (used identically in VALIDATION_FINDINGS.md §1):**
+**Consolidated T3 statement (P04 draft — SUPERSEDED by the M3 sweep, 2026-09-10;
+see SENSITIVITY_FINDINGS §2 and VALIDATION_FINDINGS §4 for the current version):**
 T3 agrees with experiment at matched simulated time (FDS +19.9 °C vs measured
-+20.2 ± 5.0 °C at t = 65 s). The residual to the experimental broad peak
-(+43 °C, reached ~300–450 s after ignition across R1–R3) is dominated by the
-wall-thermal-mass timescale that the 150 s runs do not capture, with a secondary
-D\*/δx < 10 under-resolution contribution — the two are not cleanly separable
-with the runs in hand. T3 is **not** a standalone model failure.
++20.2 ± 5.0 °C at t = 65 s). P04 attributed the residual to the +43 °C broad peak
+to a wall-thermal-mass *timescale* the short runs did not reach. **M3 refuted
+that:** a 2 mm run held T3 flat at +16 °C to 410 s, and the wall back-face
+condition makes no difference. The residual is the **wall heat-sink *model*** —
+the modelled 10 mm opaque PMMA is ~2× too absorptive; adiabatic walls overshoot
+to +60 °C; T3 ∈ [+16, +60] °C with the truth near the low-sink end. T3 is not a
+standalone model failure and not a numerical limit.
 
 **T1 and T2 (back-wall column): do NOT converge toward the data.**
 10 → 5 → 2 → 1.5 mm gives T1 = +1.4, +0.6, +0.6, +0.4 °C — flat at ambient, and

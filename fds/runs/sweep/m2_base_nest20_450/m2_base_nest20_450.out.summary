@@ -1,0 +1,63 @@
+
+ Fire Dynamics Simulator
+
+ Current Date     : September  8, 2026  11:46:57
+ Revision         : FDS-6.11.1-0-gff928db-HEAD
+ Revision Date    : Thu Jul 9 17:24:07 2026 -0400
+ Compiler         : Intel(R) Fortran Compiler for applications running on Intel(R) 64, Version 2025.1.1 Build 20250418
+ Compilation Date : Sep 01, 2026 14:31:03
+
+ Number of MPI Processes:  7
+
+ MPI version: 3.1
+ MPI library version: Intel(R) MPI Library 2021.15 for Linux* OS
+
+ Hypre library version: v3.0.0
+ Sundials library version: v7.5.0
+
+ Job TITLE        : candle compartment -- 1 candle(s), near-fire dx=2.0 mm, SEALED box
+ Job ID string    : m2_base_nest20_450
+
+
+ Grid Dimensions, Mesh     1
+
+   Cells in the X Direction           125
+   Cells in the Y Direction            38
+   Cells in the Z Direction            63
+   Number of Grid Cells            299250
+
+
+ Physical Dimensions, Mesh     1
+
+   Length (m)                       1.000
+   Width  (m)                       0.304
+   Height (m)                       0.504
+
+ Grid Dimensions, Mesh     2
+
+   Cells in the X Direction            84
+   Cells in the Y Direction            52
+   Cells in the Z Direction            16
+   Number of Grid Cells             69888
+
+
+ Physical Dimensions, Mesh     2
+
+...[per-step CFL/divergence blocks omitted]...
+       Time Step    10000   September  8, 2026  14:23:24
+       Time Step    20000   September  8, 2026  16:59:47
+       Time Step    30000   September  8, 2026  19:36:49
+       Time Step    40000   September  8, 2026  22:16:48
+       Time Step    50000   September  9, 2026  00:57:45
+       Time Step    60000   September  9, 2026  03:38:16
+       Time Step    70000   September  9, 2026  06:18:28
+       Time Step    80000   September  9, 2026  08:59:37
+       Time Step    90000   September  9, 2026  11:40:44
+       Time Step   100000   September  9, 2026  14:22:43
+       Time Step   110000   September  9, 2026  17:04:33
+       Time Step   120000   September  9, 2026  19:46:38
+       Time Step   130000   September  9, 2026  22:28:53
+       Time Step   140000   September 10, 2026  01:11:03
+       Time Step   150000   September 10, 2026  03:53:16
+       Time Step   160000   September 10, 2026  06:35:45
+       Time Step   170000   September 10, 2026  09:18:19
