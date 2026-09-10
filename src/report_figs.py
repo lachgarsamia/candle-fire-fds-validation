@@ -215,7 +215,59 @@ def fig_schematic():
     return p
 
 
+# ------------------------------------------------------------------ fig 4
+def fig_repeatability():
+    rows = list(csv.DictReader(open(f"{_repro.RESULT_DIR}/exponat_cross_run_summary.csv")))
+    sens = [r for r in rows if r["quantity"].startswith("TC_") and "peak rise" in r["quantity"]]
+    struct = [r for r in rows if r["quantity"] not in {s["quantity"] for s in sens}
+              and r["quantity"] != "post-ignition record length"]
+
+    fig, ax = plt.subplots(1, 2, figsize=(12, 4.4))
+
+    # (a) per-sensor peak rise: R1/R2/R3 + mean, log-y, CoV annotated
+    names = [s["quantity"].split()[0].replace("TC_0", "T").replace("TC_", "T") for s in sens]
+    x = np.arange(len(sens))
+    for j, run in enumerate(("R1", "R2", "R3")):
+        ax[0].plot(x, [float(s[run]) for s in sens], "o", ms=6, color=fs.COOL, alpha=0.55,
+                   label="R1 / R2 / R3" if j == 0 else None)
+    for i, s in enumerate(sens):
+        m, sd = float(s["mean"]), float(s["std"])
+        ax[0].plot([i - .2, i + .2], [m, m], color=fs.EMBER, lw=2)
+        ax[0].annotate(f"CoV {float(s['CoV_percent']):.0f}%", (i, m), textcoords="offset points",
+                       xytext=(0, 9), ha="center", fontsize=7.5,
+                       color=fs.V_STRUCT if float(s["CoV_percent"]) > 15 else fs.INK)
+    ax[0].set_yscale("log"); ax[0].set_xticks(x); ax[0].set_xticklabels(names)
+    ax[0].set_ylabel("peak ΔT above ambient  (°C)")
+    ax[0].set_title("(a)  per-sensor peak rise — 3 runs, mean (ember)")
+    ax[0].legend(loc="upper right")
+    ax[0].text(0.02, 0.03, "T2 CoV 29 % — mid-column sensor in the flickering plume boundary\n"
+               "T10 CoV 16 % is ±0.2 °C on a ~1 °C signal (DAQ floor)",
+               transform=ax[0].transAxes, fontsize=7.3, va="bottom", color="#7a7267")
+
+    # (b) structure metrics + time-to-peak, mean ± sigma
+    labs = [s["quantity"].replace(" (peak)", "").replace("dT ", "ΔT ") for s in struct]
+    m = [float(s["mean"]) for s in struct]; sd = [float(s["std"]) for s in struct]
+    y = np.arange(len(struct))
+    ax[1].barh(y, m, xerr=sd, color=fs.COOL, alpha=0.8, height=0.55,
+               error_kw=dict(ecolor=fs.INK, lw=1.2, capsize=4))
+    for i, s in enumerate(struct):
+        ax[1].text(m[i] + sd[i] + max(m) * 0.02, i, f"{m[i]:.1f} ± {sd[i]:.1f}  (CoV {float(s['CoV_percent']):.0f}%)",
+                   va="center", fontsize=8)
+    ax[1].set_yticks(y); ax[1].set_yticklabels(labs, fontsize=8.5)
+    ax[1].set_xlabel("value  (°C, or s for time-to-peak)")
+    ax[1].set_title("(b)  structure metrics — mean ± σ across R1–R3")
+    ax[1].set_xlim(0, max(m) * 1.55)
+
+    fig.suptitle("Experimental repeatability (n = 3) — the basis for the experimental band "
+                 "in the three-uncertainty split", fontsize=11.5, y=1.02)
+    fig.tight_layout()
+    p = f"{_repro.FIG_DIR}/report_repeatability.png"
+    fig.savefig(p); plt.close(fig)
+    return p
+
+
 if __name__ == "__main__":
     print(fig_cone())
     print(fig_compartment())
     print(fig_schematic())
+    print(fig_repeatability())

@@ -115,6 +115,11 @@ central contribution.
 │   ├── VALIDATION_FINDINGS.md      §3 above, in full
 │   ├── SENSITIVITY_FINDINGS.md     §4, the M3 uncertainty sweep
 │   ├── SMOKE_FINDINGS.md           §4, smoke / fog-analogue tracer
+│   ├── REPEATABILITY.md            experimental band (n = 3)
+│   ├── IGNITION_ANCHOR.md          the per-run t = 0 method (± 2 s)
+│   ├── LIMITATIONS.md              consolidated, grouped exp / num / model
+│   ├── NUMBERS_AUDIT.md            headline-number cross-check
+│   ├── MANIFEST.md                 decks, runs, figures, reproducers
 │   ├── M2_M3_PLAN.md               forward roadmap
 │   ├── REPORT_SUMMARY.md           2–3 pp supervisor-facing synthesis
 │   └── PROJECT_STATE.md            running settled-facts + status record

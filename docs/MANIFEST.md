@@ -72,6 +72,7 @@ bulky `.s3d/.sf/.bf` and per-step `.out` logs are git-ignored.
 | `exponat_*` (9) | `src/exponat_analysis.py` | `python src/exponat_analysis.py` | EXPONAT_FINDINGS |
 | `report_compartment_structure.png` | `src/report_figs.py` | `python src/report_figs.py` | report Phase-2 |
 | `report_study_schematic.png` | `src/report_figs.py` | `python src/report_figs.py` | report / talk opener |
+| `report_repeatability.png` | `src/report_figs.py` | `python src/report_figs.py` | REPEATABILITY, three-uncertainty band |
 | `fds_baseline_vs_R1.png` | `src/fds_post.py` | `python src/fds_post.py` | MESH_STUDY |
 | `p05_T3_convergence.png`, `p05_T1_nearfield.png` | `src/p05_validation.py` | `python src/p05_validation.py` | VALIDATION §3/§4, MESH_STUDY |
 | `validation_7TC_grid.png` | `src/fig_validation_grid.py` | `python src/fig_validation_grid.py` | VALIDATION, report |
