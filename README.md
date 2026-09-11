@@ -92,6 +92,13 @@ central contribution.
   sharp descending interface. The FDS compartment *flow* model is sound. (The
   glycerin fog is a seeded passive tracer — the comparison is transport shape
   and timing only, never concentration.)
+* **M4 — which wall hypothesis fixes T3? None of them, on their own.** Four
+  physically-motivated single-parameter fixes (IR-transparent/lower-emissivity
+  acrylic, a ceiling air gap, a thin-sheet whole rig, a lumped contact-resistance
+  bracket) were each run once, not tuned. **All four land within 0.6 °C of the
+  plain-PMMA baseline** — none closes the gap. Reported as a negative result:
+  the wall-model mechanism stays unresolved to a single cause; T3 stays the
+  bracket [+16, +60] °C.
 
 ---
 
@@ -210,6 +217,7 @@ Cluster runs (Pleiades / Bergische Universität Wuppertal) use the templates in
 | Validation + three-uncertainty split (P05) | complete |
 | Uncertainty-propagation sweep (M3) | complete — T3 residual localised to the wall heat-sink model |
 | Smoke / fog-analogue tracer (M2) | complete — FDS reproduces the slow near-uniform fill; frame-level digitization optional |
+| Wall-hypothesis test (M4) | complete — no physically-motivated single-parameter fix closes the T3 gap |
 
 `docs/PROJECT_STATE.md` is the authoritative running record.
 

@@ -27,7 +27,8 @@ experimental uncertainty. Two limits emerge at this scale, and they are
 | **In-flame column** (T1, T2) | +0.4 / +1.2 °C vs measured +49 / +13 (t = 65 s), +107 / +35 (peak); does not improve — *worsens* — with refinement | **structural** — a prescribed-HRR LES cannot place the luminous reaction zone that a thermocouple 3 cm from the wick sits in; no achievable mesh fixes it |
 
 **Consolidated T3 statement (used identically in MESH_STUDY_FINDINGS.md §4;
-updated 2026-09-10 after the M3 sweep — see SENSITIVITY_FINDINGS §2):**
+updated 2026-09-10 after the M3 sweep and 2026-09-11 after the M4 wall test —
+see SENSITIVITY_FINDINGS §2 and §M4):**
 T3 agrees with experiment at matched simulated time (FDS +19.9 °C vs measured
 +20.2 ± 5.0 °C at t = 65 s). The residual to the experimental broad peak
 (+43 °C, reached ~300–450 s after ignition across R1–R3) is a **wall
@@ -37,9 +38,17 @@ thermal-boundary model discrepancy**: the modelled compartment wraps the box in
 run held T3 at +16 from 60 s to 410 s) and **wall back-face condition** (exposed
 ≡ insulated, the heat never penetrates the slab). Removing the wall heat sink
 entirely (adiabatic) sends T3 to +60 °C and climbing; the measurement sits
-between, near the weak-sink end. T3 is **not** a standalone model failure and is
-**not** a numerical or run-length limit — it is a bracketed wall-model
-uncertainty, T3 ∈ [+16, +60] °C with the truth near the low-sink end.
+between, near the weak-sink end. The M4 test then tried four one-parameter,
+physically-motivated fixes to that wall model — IR-transparent/lower-emissivity
+acrylic, a ceiling air gap (supported by the setup photos), a thin-sheet whole
+rig, and a lumped contact-resistance bracket — **run once each, not tuned**;
+none moved T3 beyond the 5 mm mesh-noise floor (all four within 0.6 °C of the
++22.5 °C baseline), and none touched the far field or T1/T2. T3 is **not** a
+standalone model failure and is **not** a numerical or run-length limit — it is
+a bracketed wall-model uncertainty, T3 ∈ [+16, +60] °C with the truth near the
+low-sink end, and the single mechanism responsible is **not resolved** by the
+variants tested (a combination of causes, an unmodelled localized geometric
+detail, or finer resolution remain open).
 
 **Scope boundary.** Fine-mesh comparison is limited to **t ≤ 65 s** by wall-clock
 (the 1.5 mm run's 24 h limit; the 2.0 mm run reaches 150 s; the M3 2 mm run
@@ -146,8 +155,23 @@ this configuration.**
     Likely causes (not separated): acrylic modelled as grey-opaque when it is
     semi-IR-transparent; an air gap above the ceiling slab; imperfect panel
     contact. T3 ∈ **[+16 (full PMMA), +60 (no sink)] °C**, truth near the low end.
+  - **M4 wall-hypothesis test (2026-09-11 — SENSITIVITY_FINDINGS §M4, figure
+    `figures/m4_wall_variants.png`)** tried each candidate cause individually as
+    a one-sentence physical claim, run once, not tuned: PMMA emissivity 0.85 +
+    IR semi-transparency (`w1_ir`), a 4 mm ceiling + 20 mm air gap per the setup
+    photos (`w2_thinceil`), the whole rig as 4 mm sheet acrylic (`w3_thinall`),
+    and a lumped k = 0.10 contact-resistance bracket (`w4_contact`). **None
+    moved T3** — all four land at +22.3 to +23.1 °C at 350 s, within 0.6 °C of
+    the +22.5 °C baseline and inside the 5 mm mesh-noise band (±5 °C); none
+    touched the far field or T1/T2. Per the no-tuning rule, this is **reported,
+    not chased further**: the single mechanism is not resolved by the variants
+    tested. A combination of the three causes, an unmodelled localized
+    geometric detail (joints/seals rather than a uniform property), or the need
+    for finer resolution than 5 mm all remain open.
 - T3 is **not** a standalone model failure and **not** a numerical / run-length
-  limit — it is a bracketed wall-model uncertainty.
+  limit — it is a bracketed wall-model uncertainty, and the M4 test narrows
+  *what it isn't* (none of the three single-parameter wall-property hypotheses)
+  without yet narrowing *what it is*.
 
 **Data trace (verified 2026-09-07).** TC_03 (= T3): raw
 `data/raw/compartment/2026-08-27_exponat_R1.txt` col `TC_03`, baseline 25.1 °C, absolute max 64.0 °C

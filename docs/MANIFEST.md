@@ -49,10 +49,10 @@ export OMP_NUM_THREADS=4 OMP_STACKSIZE=200M ; mpiexec fds <deck>` with
 | `s6_walladi` | 5 mm | 350 s | 350 s | 8 | 21900244 | ✓ complete | M3 wall — adiabatic bracket |
 | `s7_tracer` | 5 mm | 350 s | 350 s | 8 | 21913128 | ✓ complete | M2 smoke (tracer transport) |
 | `m2_base_nest20_450` | 2.0 mm | 450 s | **417 s** | 7 | 21899510 | ⚠ TIMEOUT (48 h), checkpointed | M3 T3-vs-run-length (the decisive flat curve) |
-| `w1_ir` | 5 mm | 350 s | — | 8 | 21935051 | ⏳ running | M4 wall test |
-| `w2_thinceil` | 5 mm | 350 s | — | 8 | 21935344 | ⏳ running | M4 wall test |
-| `w3_thinall` | 5 mm | 350 s | — | 8 | 21935345 | ⏳ running | M4 wall test |
-| `w4_contact` | 5 mm | 350 s | — | 8 | 21935052 | ⏳ running | M4 wall test |
+| `w1_ir` | 5 mm | 350 s | 350 s | 8 | 21935051 | ✓ complete | M4 wall test — no T3 change |
+| `w2_thinceil` | 5 mm | 350 s | 350 s | 8 | 21935344 | ✓ complete | M4 wall test — no T3 change |
+| `w3_thinall` | 5 mm | 350 s | 350 s | 8 | 21935345 | ✓ complete | M4 wall test — no T3 change |
+| `w4_contact` | 5 mm | 350 s | 350 s | 8 | 21935052 | ✓ complete | M4 wall test — no T3 change |
 
 Superseded (cancelled): `s5/s6` first attempt 21899511 / 21899512 (2-rank,
 CPU-starved — resubmitted 8-rank); stage-2 first attempt 21913104–108 (submitted
@@ -77,7 +77,7 @@ bulky `.s3d/.sf/.bf` and per-step `.out` logs are git-ignored.
 | `p05_T3_convergence.png`, `p05_T1_nearfield.png` | `src/p05_validation.py` | `python src/p05_validation.py` | VALIDATION §3/§4, MESH_STUDY |
 | `validation_7TC_grid.png` | `src/fig_validation_grid.py` | `python src/fig_validation_grid.py` | VALIDATION, report |
 | `m3_T3_wall_bracket.png`, `m3_tracer_fill.png` | `src/m3_figs.py` | `python src/m3_figs.py` | SENSITIVITY §2/§4 |
-| `m4_wall_variants.png` | `src/m4_post.py` | `python src/m4_post.py` (after M4 lands) | SENSITIVITY §M4 |
+| `m4_wall_variants.png` | `src/m4_post.py` | `python src/m4_post.py` | SENSITIVITY §M4, VALIDATION §4 |
 | `fog_3276_calibcheck.png` | `src/fog_digitize.py` | (manual; needs the video) | SMOKE_FINDINGS |
 
 ---

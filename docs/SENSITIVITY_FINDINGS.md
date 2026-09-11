@@ -1,10 +1,13 @@
 # SENSITIVITY_FINDINGS — M3 uncertainty propagation
 
-**Date 2026-09-10.** 8 sweep runs on Pleiades, 5 mm uniform (8-rank), T_END 350 s,
-plus the 2 mm nest baseline `m2_base_nest20_450` (reached 410 s before its wall
-clock). Post-processor: `src/sensitivity_post.py` → `data/processed/sensitivity_bands.csv`,
-`sensitivity_tables.md`. Figures: `figures/m3_T3_wall_bracket.png`,
-`figures/m3_tracer_fill.png`.
+**Date 2026-09-10 (M3), updated 2026-09-11 (M4).** 8 sweep runs on Pleiades,
+5 mm uniform (8-rank), T_END 350 s, plus the 2 mm nest baseline
+`m2_base_nest20_450` (reached 410 s before its wall clock), plus 4 M4
+wall-hypothesis runs (§M4). Post-processors: `src/sensitivity_post.py` →
+`data/processed/sensitivity_bands.csv`, `sensitivity_tables.md`;
+`src/m4_post.py` → `data/processed/m4_wall_test.md`. Figures:
+`figures/m3_T3_wall_bracket.png`, `figures/m3_tracer_fill.png`,
+`figures/m4_wall_variants.png`.
 
 | run | knob | isolates |
 |---|---|---|
@@ -92,6 +95,63 @@ weak-sink end. It is **not** numerical error and **not** run length.
 
 ---
 
+## M4 · Wall-hypothesis test — no physically-motivated variant closes the gap
+
+**Date 2026-09-11.** 4 runs on Pleiades, 5 mm uniform (8-rank), T_END 350 s.
+Post-processor: `src/m4_post.py` → `data/processed/m4_wall_test.md`, figure
+`figures/m4_wall_variants.png`. Rule followed throughout: **no variant is tuned
+to hit a T3 target** — each is a one-sentence physical claim about the real rig,
+run once, and judged on whether it moves T3 toward the data *and* keeps every
+far-field residual ≤ 1 °C relative to baseline.
+
+| variant | physical claim | T3 @150 s | T3 @250 s | T3 @350 s |
+|---|---|--:|--:|--:|
+| **measured (R1–R3)** | — | +30 | +32 | +34 (→ +43.5 peak) |
+| `s0_base_dx5` (baseline) | 10 mm opaque cast PMMA, exposed backing | +15.4 | +17.1 | +22.5 |
+| `w1_ir` | PMMA emissivity 0.85 (datasheet low end) + near-IR semi-transparency | +15.2 | +16.6 | +22.9 |
+| `w2_thinceil` | inner-room ceiling = 4 mm sheet + 20 mm air gap (setup photo shows a gap) | +15.7 | +17.2 | +22.7 |
+| `w3_thinall` | whole rig is ~4 mm sheet acrylic, not 10 mm slabs | +14.6 | +24.4 | +22.3 |
+| `w4_contact` | assembled panels → joint contact resistance, lumped as k = 0.10 (bracket) | +15.0 | +22.7 | +23.1 |
+
+**Result: none of the four moves T3.** All four land within **±0.6 °C of the
+baseline's +22.5 °C at 350 s** — inside the 5 mm mesh-noise band (±5 °C, §1) and
+nowhere near the measured +34 (matched-time) / +43.5 (peak). `w3_thinall` and
+`w4_contact` show a transient bump at 250 s (+24.4, +22.7 vs baseline +17.1) but
+it does not hold — both relax back to the baseline band by 350 s.
+
+**Far-field integrity (T5/T9/T10/T11 @ 350 s vs measured peak):** every variant,
+*including the baseline*, shows max |residual| 3.3–3.7 °C on this specific
+metric — comparing the model's 350 s transient to the measurement's asymptotic
+peak (the far-field sensors plateau by ~150 s per REPEATABILITY, the model has
+not yet plateaued at 350 s). This is a **pre-existing baseline gap, not damage
+introduced by a variant** — all five rows (baseline + 4 variants) sit within
+0.4 °C of each other. No variant makes the far-field worse or better; the
+integrity check's purpose — catching a variant that trades T3 for a broken
+far-field — does not trigger here because no variant changes anything enough to
+trade.
+
+**T1/T2 untouched**, as required: +0.6–0.7 / +1.5–1.7 °C across all five rows.
+
+**Conclusion — reported, not dialled further.** Following the M4 rule ("if no
+physically-defensible variant reaches the measured range, report it — don't
+keep dialing"): **three physically-motivated hypotheses for a weaker wall heat
+sink (semi-transparent IR, a ceiling air gap, whole-rig thin sheet) and one
+bracketing hypothesis (lumped contact resistance) all leave T3 pinned at the
+same ~+22–23 °C the plain 10 mm-PMMA baseline gives.** The bracket from §2 —
+measured value sits between full-PMMA (+16–22) and adiabatic (+60), nearer the
+weak-sink end — **stands**, but none of the tested single-parameter causes
+(emissivity/transparency, air gap, uniform thin sheet, uniform contact
+resistance) is *itself* sufficient to move the model there at 5 mm. The
+remaining candidates are either a **combination** of these effects, an
+**unmodelled geometric detail** (localized joints/seals rather than a uniform
+property change), or **resolution** (the wall differences may need the finer
+mesh to register — 5 mm carries ±5 °C of its own noise, comparable to the
+largest single-variant shift seen here). **T3 stays reported as the bracket
+[+16, +60] °C with the wall thermal-boundary *model* as the flagged residual —
+not resolved to a single mechanism.**
+
+---
+
 ## 3 · T1 / T2 remain a structural limit — unchanged
 
 The adiabatic run (s6) raises T1 to +23–46 °C and T2 to +27–50 °C — but it raises
@@ -153,6 +213,11 @@ sound.** (The wall §2 issue is a *thermal boundary* problem, not a flow problem
 3. **One run per configuration** — no LES ensemble.
 4. `s6` adiabatic drives `p_box` to 12.8 kPa — a non-physical sealed-box
    pressurisation. It is used only as the no-heat-sink bracket.
-5. The wall-model causes in §2 (IR-transparency, air gap, contact) are
-   **hypotheses** — separating them needs a wall-property / ceiling-construction
-   sweep that is out of scope here.
+5. The wall-model causes in §2 (IR-transparency, air gap, contact) **were tested
+   individually in §M4** and none, alone, moved T3 beyond the 5 mm noise floor —
+   they remain unseparated; a combination, an unmodelled localized geometric
+   detail, or finer resolution are the remaining candidates.
+6. **M4 is also 5 mm.** A shift smaller than ~5 °C between variants is not
+   distinguishable from mesh noise at this resolution — the M4 null result
+   (all variants within 0.6 °C of baseline) is solid, but a *small* real effect
+   from any one hypothesis could be hiding under that noise floor.

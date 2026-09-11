@@ -96,8 +96,11 @@ Source-of-truth ranking: `data/processed/*_digest.json` and `*_summary.csv`
 
 ---
 
-## Not audited (no committed data)
+## M4 wall-variant results — landed 2026-09-11
 
-M4 wall-variant results (`w1_ir`, `w2_thinceil`, `w3_thinall`, `w4_contact`) —
-running on Pleiades; `src/m4_post.py` + `docs/SENSITIVITY_FINDINGS §M4` will fold
-them in with the same far-field-integrity check.
+`w1_ir`, `w2_thinceil`, `w3_thinall`, `w4_contact` (`fds/runs/sweep/w*/`),
+folded in via `src/m4_post.py` → `data/processed/m4_wall_test.md`,
+`docs/SENSITIVITY_FINDINGS.md §M4`, `docs/VALIDATION_FINDINGS.md §4`. Result:
+T3 @350 s for all four (+22.3 to +23.1 °C) sits within 0.6 °C of the baseline
+(+22.5 °C) — no variant closes the gap to measurement; reported as a negative
+result per the M4 no-tuning rule, not chased further.
