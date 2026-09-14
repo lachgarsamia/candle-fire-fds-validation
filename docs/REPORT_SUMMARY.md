@@ -1,8 +1,9 @@
 # A tea-light fire, measured and simulated — summary
 
-*Supervisor-facing synthesis, 2026-09-07. Detail and data traces are in
-CONE_FINDINGS.md, EXPONAT_FINDINGS.md, MESH_STUDY_FINDINGS.md and
-VALIDATION_FINDINGS.md; this document does not re-derive them.*
+*Supervisor-facing synthesis, 2026-09-07, updated 2026-09-11 after the M3/M4
+sweeps. Detail and data traces are in CONE_FINDINGS.md, EXPONAT_FINDINGS.md,
+MESH_STUDY_FINDINGS.md, VALIDATION_FINDINGS.md and SENSITIVITY_FINDINGS.md;
+this document does not re-derive them.*
 
 ---
 
@@ -123,10 +124,14 @@ configuration.
 → *see* `figures/p05_T1_nearfield.png`.
 
 The central result is that these last two discrepancies, which look identical in
-a raw simulation-versus-experiment table, are distinct: one closes with
-resolution and run time, the other does not close at all. Separating them —
-rather than tuning the source until the near-fire numbers agree — is the
-contribution.
+a raw simulation-versus-experiment table, are distinct: one is a bracketed
+**wall thermal-boundary model** uncertainty — it does not close with more mesh
+resolution or a longer run (both were tested and ruled out), and a follow-up
+test of four specific physical causes (M4, below) did not close it either — the
+other is a **structural** limit that does not close at any resolution.
+Separating them, and being honest that the wall-model residual is not yet
+explained by a single mechanism — rather than tuning the source until the
+near-fire numbers agree — is the contribution.
 
 ## 4. Future work
 
@@ -134,11 +139,16 @@ contribution.
   reproduces the video's slow near-uniform fog fill (near-uniform by ~250 s, weak
   doorway flow); the FDS compartment *flow* model is sound. See SMOKE_FINDINGS
   and SENSITIVITY_FINDINGS §4.
-- **Wall thermal boundary.** The M3 sweep localised the T3 residual to the wall
-  heat-sink model but did not separate its causes (IR-transparent acrylic
-  modelled as opaque; air gap above the ceiling slab; panel contact). A
-  wall-property / ceiling-construction sweep would close this — the natural next
-  step for T3.
+- **Wall thermal boundary — tested, not resolved (M4).** The M3 sweep localised
+  the T3 residual to the wall heat-sink model; M4 then tested each of the three
+  candidate causes individually (IR-transparent/lower-emissivity acrylic, a
+  ceiling air gap per the setup photos, a thin-sheet whole rig) plus a lumped
+  contact-resistance bracket, each a one-sentence hypothesis run once, not
+  tuned. **None moved T3** — all four land within 0.6 °C of the plain-PMMA
+  baseline. Reported as a negative result rather than chased further; T3 stays
+  the bracket [+16, +60] °C. The remaining candidates are a *combination* of
+  these causes, an unmodelled localized geometric detail (joints/seals), or
+  finer resolution than the 5 mm this test ran at. See SENSITIVITY_FINDINGS §M4.
 - **1.5 mm run to quasi-steady.** The finest mesh stopped at 65 s. A restart to
   150 s would tighten the T3 numerical band and give a genuine four-point
   resolution ladder at a common time; the conclusions do not depend on it.
