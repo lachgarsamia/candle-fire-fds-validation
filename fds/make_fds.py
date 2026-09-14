@@ -311,15 +311,53 @@ def _uniform_split(dx, nx, ny, nz):
     return lines
 
 
-def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None):
+def _uniform_mult(dx, nx, ny, nz):
+    """Uniform full-domain mesh, same guarded split as _uniform_split (layer-
+    device columns, ROOM_Z band), but emitted as ONE &MULT-tiled &MESH block
+    (the supervisor's FireScope template.fds mechanism) instead of nx*ny*nz
+    individually-written &MESH lines. One MULT block = one MPI rank, same as
+    _uniform_split; no MPI_PROCESS on the MESH line -- FDS round-robins MULT
+    replicas across ranks in creation order, exactly as the template does."""
+    x0, x1, y0, y1, z0, z1 = DOMAIN
+    I, J, K = _ijk((x0, x1, y0, y1, z0, z1), dx)
+    for n, tot, ax in ((nx, I, "I"), (ny, J, "J"), (nz, K, "K")):
+        if tot % n:
+            raise ValueError(f"mult split {ax}={n} does not divide {ax}={tot} (dx={dx*1000:.2f} mm)")
+    ti, tj, tk = I // nx, J // ny, K // nz
+    tdx, tdy, tdz = ti * dx, tj * dx, tk * dx
+    xs = [round(x0 + i * tdx, 6) for i in range(nx + 1)]
+    ys = [round(y0 + j * tdy, 6) for j in range(ny + 1)]
+    zs = [round(z0 + k * tdz, 6) for k in range(nz + 1)]
+    for cx, cy in LAYER_COLS:
+        if any(abs(p - cx) < 1.5 * dx for p in xs[1:-1]):
+            raise ValueError(f"x-mult-tile lands on layer column x={cx}")
+        if any(abs(p - cy) < 1.5 * dx for p in ys[1:-1]):
+            raise ValueError(f"y-mult-tile lands on layer column y={cy}")
+    if any(z0 + 1e-6 < p < ROOM_Z - 1e-6 for p in zs[1:-1]):
+        raise ValueError("z-mult-tile cuts the 0-{:.2f} m layer band".format(ROOM_Z))
+    n_blocks = nx * ny * nz
+    return [
+        f"&MULT ID='m1', DX={tdx:.6f}, DY={tdy:.6f}, DZ={tdz:.6f}, "
+        f"I_UPPER={nx-1}, J_UPPER={ny-1}, K_UPPER={nz-1} /",
+        f"&MESH IJK={ti},{tj},{tk}, XB={x0:.4f},{x0+tdx:.4f},{y0:.4f},{y0+tdy:.4f},"
+        f"{z0:.4f},{z0+tdz:.4f}, MULT_ID='m1' / MULT-tiled dx={dx*1000:.2f}mm, uniform {nx}x{ny}x{nz}",
+        f"! {n_blocks} MULT blocks / MPI ranks  ({I*J*K/1e6:.3f} M cells total, "
+        f"{(I*J*K)//n_blocks:,} cells/rank)",
+    ]
+
+
+def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=None):
     """&MESH line(s): uniform single mesh unless fine_dx is given, else a
     2-level nest core(fine_dx) inside outer(4*fine_dx). cluster=True splits both
     levels on the shared hierarchical CLUSTER_CUTS (one MPI rank per mesh).
-    Uniform mesh: split_xyz=(nx,ny,nz) for a general MPI split (guards the layer
-    columns), or the legacy split_z>1 for equal z-slabs."""
+    Uniform mesh: mult_xyz=(nx,ny,nz) for a &MULT-tiled uniform split (FireScope
+    template.fds mechanism), split_xyz=(nx,ny,nz) for the equivalent hand-
+    enumerated &MESH-per-block split, or the legacy split_z>1 for equal z-slabs."""
     x0, x1, y0, y1, z0, z1 = DOMAIN
     if not fine_dx:
         I, J, K = _ijk((x0, x1, y0, y1, z0, z1), dx)
+        if mult_xyz and tuple(mult_xyz) != (1, 1, 1):
+            return _uniform_mult(dx, *mult_xyz)
         if split_xyz and tuple(split_xyz) != (1, 1, 1):
             return _uniform_split(dx, *split_xyz)
         if split_z <= 1:
@@ -351,7 +389,8 @@ def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None):
 
 def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False, split_z=1,
          hrr_w=HRR_W, rad_fraction=RAD_FRACTION, soot_yield=SOOT_YIELD, dhc=DHC_KJKG,
-         tmpa=TMPA, wall="pmma", smoke=True, split_xyz=None, tracer=False):
+         tmpa=TMPA, wall="pmma", smoke=True, split_xyz=None, tracer=False, mult_xyz=None,
+         dt_restart=None):
     x0, x1, y0, y1, z0, z1 = DOMAIN
     near_dx = fine_dx or dx
     Ds = dstar(hrr_w * (1 if n_candles == 1 else n_candles), tmpa)
@@ -442,7 +481,7 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
         disc_lines.append("&DEVC ID='Tmax_T1cell', QUANTITY='TEMPERATURE', SPATIAL_STATISTIC='MAX', "
                           "XB=0.09,0.15,0.14,0.16,0.03,0.07 /  ! peak T in the T1 neighbourhood")
 
-    meshes = os.linesep.join(mesh_block(dx, fine_dx, cluster, split_z, split_xyz))
+    meshes = os.linesep.join(mesh_block(dx, fine_dx, cluster, split_z, split_xyz, mult_xyz))
     candle_obst = os.linesep.join(candles)
     tcs = os.linesep.join(tc_lines + ([""] + disc_lines if disc_lines else []))
     disc_slcf = ("&SLCF PBY=0.15, QUANTITY='HRRPUV', CELL_CENTERED=.TRUE. /\n"
@@ -508,7 +547,7 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
 
     &TIME T_END={t_end:.1f} /
     &MISC TMPA={tmpa:.1f} /           ! exponat R1 pre-ignition TC median ~25 C
-    &DUMP DT_DEVC=1.0, DT_HRR=1.0, DT_SLCF=5.0, DT_BNDF=10.0, SIG_FIGS=6 /
+    &DUMP DT_DEVC=1.0, DT_HRR=1.0, DT_SLCF=5.0, DT_BNDF=10.0, SIG_FIGS=6{f', DT_RESTART={dt_restart:.0f}' if dt_restart else ''} /
 
     ! ============================================================
     !  COMBUSTION  --  source term from CONE_FINDINGS.md (NOT calibrated here)
@@ -607,6 +646,12 @@ def main():
     ap.add_argument("--split", default=None, metavar="NX,NY,NZ",
                     help="uniform mesh only: general MPI split into NX*NY*NZ boxes "
                          "(guards the layer-device columns; NZ<=2). e.g. --split 4,1,2")
+    ap.add_argument("--mult", default=None, metavar="NX,NY,NZ",
+                    help="uniform mesh only: same split as --split but emitted as ONE "
+                         "&MULT-tiled &MESH block (FireScope template.fds mechanism) "
+                         "instead of NX*NY*NZ hand-enumerated &MESH lines. e.g. --mult 8,2,4")
+    ap.add_argument("--dt-restart", type=float, default=None,
+                    help="add DT_RESTART=<s> to &DUMP so a wall-clock hit can resume")
     # --- source / wall sweep knobs (M3 uncertainty propagation). Defaults = the
     #     P03/P04/P05 baseline, so omitting them reproduces the baseline deck. ---
     ap.add_argument("--hrr-w", type=float, default=HRR_W,
@@ -630,16 +675,17 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     disc = a.discriminate or (a.fine_dx is not None)
     sxyz = tuple(int(v) for v in a.split.split(",")) if a.split else None
+    mxyz = tuple(int(v) for v in a.mult.split(",")) if a.mult else None
     txt = deck(a.dx, a.fine_dx, a.t_end, a.chid, a.n_candles, a.cluster, disc, a.split_z,
                hrr_w=a.hrr_w, rad_fraction=a.rad_fraction, soot_yield=a.soot_yield,
                dhc=a.dhc, tmpa=a.tmpa, wall=a.wall, smoke=not a.no_smoke, split_xyz=sxyz,
-               tracer=a.tracer)
+               tracer=a.tracer, mult_xyz=mxyz, dt_restart=a.dt_restart)
     path = os.path.join(a.out, f"{a.chid}.fds")
     with open(path, "w") as f:
         f.write(txt)
 
     near = a.fine_dx or a.dx
-    nmesh = txt.count("&MESH")
+    nmesh = (mxyz[0] * mxyz[1] * mxyz[2]) if mxyz else txt.count("&MESH")
     if a.fine_dx:
         odx, oxb, cxb = _nest_geometry(a.fine_dx)
         no, nc = _prod(_ijk(oxb, odx)), _prod(_ijk(cxb, a.fine_dx))
