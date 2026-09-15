@@ -1,0 +1,18 @@
+&HEAD CHID='repro_mult_core', TITLE='minimal MULT-background + nested-core reproducer' /
+&MESH IJK=2,4,4, XB=0.0,0.1,0.0,0.2,0.0,0.2, MULT_ID='bg' /
+&MULT ID='bg', DX=0.1, I_UPPER=3 /
+&MESH ID='core', MPI_PROCESS=4, IJK=10,10,10, XB=0.05,0.15,0.05,0.15,0.0,0.1 /
+
+&TIME T_END=1.0 /
+&MISC TMPA=20.0 /
+&DUMP DT_DEVC=1.0 /
+
+&SURF ID='INERT_ALL', COLOR='GRAY', DEFAULT=.TRUE. /
+&VENT MB='XMIN', SURF_ID='OPEN' /
+&VENT MB='XMAX', SURF_ID='OPEN' /
+&VENT MB='YMIN', SURF_ID='OPEN' /
+&VENT MB='YMAX', SURF_ID='OPEN' /
+&VENT MB='ZMIN', SURF_ID='OPEN' /
+&VENT MB='ZMAX', SURF_ID='OPEN' /
+
+&TAIL /
