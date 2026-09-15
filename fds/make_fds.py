@@ -254,11 +254,25 @@ def _mesh_grid(name, xb, dx, cuts, rank0):
     return lines, r
 
 
-def _nest_geometry(fine_dx):
-    """(outer_dx, outer_xb, core_xb) for the 2-level 4:1 nest. outer_dx =
-    4*fine_dx; domain snapped UP to whole outer cells; core snapped to the
-    outer grid so every core face is on an outer cell line."""
-    outer_dx = 4 * fine_dx
+def _hybrid_core_xb(fine_dx, outer_dx):
+    """Core box for the independent-background hybrid (Task 2): snapped to the
+    LCM of outer_dx and fine_dx, not outer_dx alone, so the core's own fine_dx
+    cells still divide its box evenly (only guaranteed automatically when
+    outer_dx is an exact multiple of fine_dx, e.g. the 4:1 nest -- not the case
+    here)."""
+    o_um, f_um = round(outer_dx * 1e6), round(fine_dx * 1e6)
+    lcm = (o_um * f_um // math.gcd(o_um, f_um)) / 1e6
+    return _snap_region(CORE_XB_NOMINAL, lcm), lcm
+
+
+def _nest_geometry(fine_dx, outer_dx=None):
+    """(outer_dx, outer_xb, core_xb) for the 2-level nest. outer_dx defaults to
+    4*fine_dx (the validated ratio for nest15/nest20); pass an explicit outer_dx
+    to decouple background resolution from the core (Task 2 background-variation
+    study) -- untested ratio territory, parse-check before trusting. domain
+    snapped UP to whole outer cells; core snapped to the outer grid so every
+    core face is on an outer cell line."""
+    outer_dx = outer_dx or 4 * fine_dx
     x0, z0 = DOMAIN[0], DOMAIN[4]
     outer_xb = (x0,
                 x0 + math.ceil(round((DOMAIN[1] - x0) / outer_dx, 6)) * outer_dx,
@@ -311,14 +325,28 @@ def _uniform_split(dx, nx, ny, nz):
     return lines
 
 
+def _padded_domain(dx):
+    """DOMAIN rounded UP to whole dx cells (same convention _nest_geometry uses
+    for the outer mesh) -- a no-op when dx already divides DOMAIN exactly (every
+    dx used before this), a small extra-air margin when it doesn't (e.g. 7.5mm:
+    1.00/0.0075=133.33, needs padding to 134 cells = 1.005 m)."""
+    x0, z0 = DOMAIN[0], DOMAIN[4]
+    x1 = x0 + math.ceil(round((DOMAIN[1] - x0) / dx, 6)) * dx
+    y1 = DOMAIN[2] + math.ceil(round((DOMAIN[3] - DOMAIN[2]) / dx, 6)) * dx
+    z1 = z0 + math.ceil(round((DOMAIN[5] - z0) / dx, 6)) * dx
+    return (round(x0, 6), round(x1, 6), round(DOMAIN[2], 6), round(y1, 6), round(z0, 6), round(z1, 6))
+
+
 def _uniform_mult(dx, nx, ny, nz):
     """Uniform full-domain mesh, same guarded split as _uniform_split (layer-
     device columns, ROOM_Z band), but emitted as ONE &MULT-tiled &MESH block
     (the supervisor's FireScope template.fds mechanism) instead of nx*ny*nz
     individually-written &MESH lines. One MULT block = one MPI rank, same as
     _uniform_split; no MPI_PROCESS on the MESH line -- FDS round-robins MULT
-    replicas across ranks in creation order, exactly as the template does."""
-    x0, x1, y0, y1, z0, z1 = DOMAIN
+    replicas across ranks in creation order, exactly as the template does.
+    Domain is padded UP to whole dx cells first (_padded_domain) -- a no-op
+    when dx divides DOMAIN exactly."""
+    x0, x1, y0, y1, z0, z1 = _padded_domain(dx)
     I, J, K = _ijk((x0, x1, y0, y1, z0, z1), dx)
     for n, tot, ax in ((nx, I, "I"), (ny, J, "J"), (nz, K, "K")):
         if tot % n:
@@ -346,13 +374,19 @@ def _uniform_mult(dx, nx, ny, nz):
     ]
 
 
-def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=None):
+def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=None,
+               outer_dx=None, bg_mult_xyz=None):
     """&MESH line(s): uniform single mesh unless fine_dx is given, else a
-    2-level nest core(fine_dx) inside outer(4*fine_dx). cluster=True splits both
-    levels on the shared hierarchical CLUSTER_CUTS (one MPI rank per mesh).
-    Uniform mesh: mult_xyz=(nx,ny,nz) for a &MULT-tiled uniform split (FireScope
-    template.fds mechanism), split_xyz=(nx,ny,nz) for the equivalent hand-
-    enumerated &MESH-per-block split, or the legacy split_z>1 for equal z-slabs."""
+    2-level nest core(fine_dx) inside outer(4*fine_dx, or an explicit outer_dx).
+    cluster=True splits both levels on the shared hierarchical CLUSTER_CUTS (one
+    MPI rank per mesh). bg_mult_xyz=(nx,ny,nz) MULT-tiles the background at
+    outer_dx (independent of fine_dx -- Task 2 background-variation study) with
+    the fixed nest15-style 6-z-slab core embedded in it; UNTESTED combination
+    (MULT auto-ranked meshes + explicit-MPI_PROCESS meshes in one deck) --
+    parse-check before trusting. Uniform mesh: mult_xyz=(nx,ny,nz) for a
+    &MULT-tiled uniform split (FireScope template.fds mechanism), split_xyz=
+    (nx,ny,nz) for the equivalent hand-enumerated &MESH-per-block split, or the
+    legacy split_z>1 for equal z-slabs."""
     x0, x1, y0, y1, z0, z1 = DOMAIN
     if not fine_dx:
         I, J, K = _ijk((x0, x1, y0, y1, z0, z1), dx)
@@ -364,7 +398,30 @@ def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=N
             return [f"&MESH IJK={I},{J},{K}, XB={x0:.3f},{x1:.3f},{y0:.3f},{y1:.3f},{z0:.3f},{z1:.3f} / whole domain, dx={dx*1000:.1f} mm"]
         return _uniform_split(dx, 1, 1, split_z)
 
-    outer_dx, dbig, core_xb = _nest_geometry(fine_dx)
+    if bg_mult_xyz:
+        # Background and core are on INDEPENDENT grids here (not the 4:1 nest),
+        # so the core's outer boundary must land on a line common to BOTH grids
+        # -- snap to their LCM, not to outer_dx directly, or the core's own
+        # fine_dx cells won't divide its (outer_dx-snapped) box evenly.
+        _outer_dx = outer_dx
+        core_xb, lcm = _hybrid_core_xb(fine_dx, _outer_dx)
+        n_bg = bg_mult_xyz[0] * bg_mult_xyz[1] * bg_mult_xyz[2]
+        bg_lines = _uniform_mult(_outer_dx, *bg_mult_xyz)
+        # z-cuts are core-internal (core-to-core interfaces only) -- only need
+        # to land on the core's OWN fine_dx grid, not the background/LCM grid.
+        cuts = {"x": [], "y": [], "z": [_grid_snap(c, fine_dx) for c in CLUSTER_CUTS["core"]["z"]]}
+        core_lines, _ = _mesh_grid("core", core_xb, fine_dx, cuts, n_bg)
+        n_core = len(core_lines)
+        lines = bg_lines + core_lines
+        lines.append(f"! background {n_bg} MULT blocks @ {_outer_dx*1000:.2f}mm "
+                     f"({bg_mult_xyz[0]}x{bg_mult_xyz[1]}x{bg_mult_xyz[2]}) + "
+                     f"core {n_core} @ {fine_dx*1000:.2f}mm (snap grid {lcm*1000:.1f}mm)  "
+                     f"({n_bg + n_core} ranks total)")
+        return lines
+
+    _outer_dx, dbig, core_xb = _nest_geometry(fine_dx, outer_dx)
+
+    outer_dx = _outer_dx
     if not cluster:
         return [
             f"&MESH ID='outer', MPI_PROCESS=0, IJK={','.join(map(str,_ijk(dbig,outer_dx)))}, "
@@ -390,12 +447,17 @@ def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=N
 def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False, split_z=1,
          hrr_w=HRR_W, rad_fraction=RAD_FRACTION, soot_yield=SOOT_YIELD, dhc=DHC_KJKG,
          tmpa=TMPA, wall="pmma", smoke=True, split_xyz=None, tracer=False, mult_xyz=None,
-         dt_restart=None):
+         dt_restart=None, outer_dx=None, bg_mult_xyz=None):
     x0, x1, y0, y1, z0, z1 = DOMAIN
     near_dx = fine_dx or dx
     Ds = dstar(hrr_w * (1 if n_candles == 1 else n_candles), tmpa)
     cells_across = Ds / near_dx
-    core_xb = _nest_geometry(fine_dx)[2] if fine_dx else CORE_XB_NOMINAL
+    if bg_mult_xyz:
+        core_xb = _hybrid_core_xb(fine_dx, outer_dx)[0]
+    elif fine_dx:
+        core_xb = _nest_geometry(fine_dx, outer_dx)[2]
+    else:
+        core_xb = CORE_XB_NOMINAL
     wp = WALL_PRESETS[wall]
     room_surf = wp.get("room_surf", "ACRYLIC_WALL")   # inner-room ceiling + doorway wall
 
@@ -481,7 +543,8 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
         disc_lines.append("&DEVC ID='Tmax_T1cell', QUANTITY='TEMPERATURE', SPATIAL_STATISTIC='MAX', "
                           "XB=0.09,0.15,0.14,0.16,0.03,0.07 /  ! peak T in the T1 neighbourhood")
 
-    meshes = os.linesep.join(mesh_block(dx, fine_dx, cluster, split_z, split_xyz, mult_xyz))
+    meshes = os.linesep.join(mesh_block(dx, fine_dx, cluster, split_z, split_xyz, mult_xyz,
+                                          outer_dx, bg_mult_xyz))
     candle_obst = os.linesep.join(candles)
     tcs = os.linesep.join(tc_lines + ([""] + disc_lines if disc_lines else []))
     disc_slcf = ("&SLCF PBY=0.15, QUANTITY='HRRPUV', CELL_CENTERED=.TRUE. /\n"
@@ -650,6 +713,13 @@ def main():
                     help="uniform mesh only: same split as --split but emitted as ONE "
                          "&MULT-tiled &MESH block (FireScope template.fds mechanism) "
                          "instead of NX*NY*NZ hand-enumerated &MESH lines. e.g. --mult 8,2,4")
+    ap.add_argument("--outer-dx", type=float, default=None,
+                    help="nested mesh only: explicit background cell size (m), decoupled "
+                         "from the default 4*fine_dx ratio (Task 2 background-variation study)")
+    ap.add_argument("--bg-mult", default=None, metavar="NX,NY,NZ",
+                    help="nested mesh only: MULT-tile the background at --outer-dx (or "
+                         "4*fine_dx) into NX*NY*NZ blocks, with the fixed 6-z-slab core "
+                         "embedded in it. e.g. --fine-dx 0.0015 --outer-dx 0.0125 --bg-mult 8,2,2")
     ap.add_argument("--dt-restart", type=float, default=None,
                     help="add DT_RESTART=<s> to &DUMP so a wall-clock hit can resume")
     # --- source / wall sweep knobs (M3 uncertainty propagation). Defaults = the
@@ -676,22 +746,34 @@ def main():
     disc = a.discriminate or (a.fine_dx is not None)
     sxyz = tuple(int(v) for v in a.split.split(",")) if a.split else None
     mxyz = tuple(int(v) for v in a.mult.split(",")) if a.mult else None
+    bgxyz = tuple(int(v) for v in a.bg_mult.split(",")) if a.bg_mult else None
     txt = deck(a.dx, a.fine_dx, a.t_end, a.chid, a.n_candles, a.cluster, disc, a.split_z,
                hrr_w=a.hrr_w, rad_fraction=a.rad_fraction, soot_yield=a.soot_yield,
                dhc=a.dhc, tmpa=a.tmpa, wall=a.wall, smoke=not a.no_smoke, split_xyz=sxyz,
-               tracer=a.tracer, mult_xyz=mxyz, dt_restart=a.dt_restart)
+               tracer=a.tracer, mult_xyz=mxyz, dt_restart=a.dt_restart,
+               outer_dx=a.outer_dx, bg_mult_xyz=bgxyz)
     path = os.path.join(a.out, f"{a.chid}.fds")
     with open(path, "w") as f:
         f.write(txt)
 
     near = a.fine_dx or a.dx
-    nmesh = (mxyz[0] * mxyz[1] * mxyz[2]) if mxyz else txt.count("&MESH")
-    if a.fine_dx:
-        odx, oxb, cxb = _nest_geometry(a.fine_dx)
+    if bgxyz:
+        n_bg = bgxyz[0] * bgxyz[1] * bgxyz[2]
+        nmesh = n_bg + 6   # fixed 6-z-slab core, see CLUSTER_CUTS["core"]["z"]
+        odx = a.outer_dx
+        cxb, lcm = _hybrid_core_xb(a.fine_dx, odx)
+        nbgc, nc = _prod(_ijk(_padded_domain(odx), odx)), _prod(_ijk(cxb, a.fine_dx))
+        cells = (f"background {odx*1000:.2f}mm ~{nbgc/1e6:.2f}M ({n_bg} MULT blocks) + "
+                 f"core {a.fine_dx*1000:.1f}mm ~{nc/1e6:.2f}M (6 slabs, snap grid {lcm*1000:.1f}mm) "
+                 f"= {(nbgc+nc)/1e6:.2f} M over {nmesh} mesh(es)")
+    elif a.fine_dx:
+        nmesh = (mxyz[0] * mxyz[1] * mxyz[2]) if mxyz else txt.count("&MESH")
+        odx, oxb, cxb = _nest_geometry(a.fine_dx, a.outer_dx)
         no, nc = _prod(_ijk(oxb, odx)), _prod(_ijk(cxb, a.fine_dx))
         cells = (f"outer {odx*1000:.0f}mm ~{no/1e3:.0f}k + core {a.fine_dx*1000:.1f}mm ~{nc/1e6:.2f}M "
                  f"= {(no+nc)/1e6:.2f} M over {nmesh} mesh(es)")
     else:
+        nmesh = (mxyz[0] * mxyz[1] * mxyz[2]) if mxyz else txt.count("&MESH")
         cells = f"{_prod(_ijk(DOMAIN, a.dx))/1e6:.2f} M (1 mesh)"
     q = a.hrr_w * max(1, a.n_candles)
     print(f"wrote {path}")

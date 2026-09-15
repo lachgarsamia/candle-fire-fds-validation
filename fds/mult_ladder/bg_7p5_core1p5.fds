@@ -1,0 +1,150 @@
+    &HEAD CHID='bg_7p5_core1p5', TITLE='candle compartment -- 1 candle(s), near-fire dx=1.5 mm, SEALED box' /
+    !  SOURCE/WALL: baseline (CONE_FINDINGS defaults)
+
+    ! ============================================================
+    !  MESH  --  D* = 1.21 cm for a 18 W fire
+    !  near-fire dx = 1.5 mm  ->  D*/dx = 8.1
+    !  (FDS convention wants ~10-16; a 18 W candle plume is near the
+    !   lower edge of FDS's validated envelope -- this is a KNOWN weak point,
+    !   quantified by the P04 mesh study, not hidden.)
+    ! ============================================================
+    &MULT ID='m1', DX=0.502500, DY=0.060000, DZ=0.502500, I_UPPER=1, J_UPPER=4, K_UPPER=0 /
+&MESH IJK=67,8,67, XB=0.0000,0.5025,0.0000,0.0600,0.0000,0.5025, MULT_ID='m1' / MULT-tiled dx=7.50mm, uniform 2x5x1
+! 10 MULT blocks / MPI ranks  (0.359 M cells total, 35,912 cells/rank)
+&MESH ID='core_000', MPI_PROCESS=10, IJK=115,70,24, XB=0.0000,0.1725,0.0975,0.2025,0.0000,0.0360 / core dx=1.50mm
+&MESH ID='core_001', MPI_PROCESS=11, IJK=115,70,24, XB=0.0000,0.1725,0.0975,0.2025,0.0360,0.0720 / core dx=1.50mm
+&MESH ID='core_002', MPI_PROCESS=12, IJK=115,70,28, XB=0.0000,0.1725,0.0975,0.2025,0.0720,0.1140 / core dx=1.50mm
+&MESH ID='core_003', MPI_PROCESS=13, IJK=115,70,28, XB=0.0000,0.1725,0.0975,0.2025,0.1140,0.1560 / core dx=1.50mm
+&MESH ID='core_004', MPI_PROCESS=14, IJK=115,70,28, XB=0.0000,0.1725,0.0975,0.2025,0.1560,0.1980 / core dx=1.50mm
+&MESH ID='core_005', MPI_PROCESS=15, IJK=115,70,28, XB=0.0000,0.1725,0.0975,0.2025,0.1980,0.2400 / core dx=1.50mm
+! background 10 MULT blocks @ 7.50mm (2x5x1) + core 6 @ 1.50mm (snap grid 7.5mm)  (16 ranks total)
+
+    &TIME T_END=150.0 /
+    &MISC TMPA=25.0 /           ! exponat R1 pre-ignition TC median ~25 C
+    &DUMP DT_DEVC=1.0, DT_HRR=1.0, DT_SLCF=5.0, DT_BNDF=10.0, SIG_FIGS=6, DT_RESTART=3600 /
+
+    ! ============================================================
+    !  COMBUSTION  --  source term from CONE_FINDINGS.md (NOT calibrated here)
+    !  18 W per candle (measured band 16-20 W; total source uncertainty +-15-20%)
+    !  paraffin, clean flame (cone soot ~ 0), constant HRR (balance mass-loss
+    !  linear to r^2 > 0.999) with a 25 s ignition ramp.
+    !  NOTE: fuel composition goes ON THE REAC (FORMULA=). A standalone
+    !  &SPEC ID='PARAFFIN' PLUS &REAC FUEL='PARAFFIN' double-declares the species
+    !  and corrupts the species setup in FDS 6.11.x (malloc: corrupted top size,
+    !  confirmed on Pleiades). FDS defines the fuel species from FORMULA itself.
+    ! ============================================================
+    &REAC FUEL='PARAFFIN', FORMULA='C25H52', SOOT_YIELD=0.008, CO_YIELD=0.001,
+          HEAT_OF_COMBUSTION=42000, RADIATIVE_FRACTION=0.25 /
+
+
+    &SURF ID='CANDLE_FLAME', HRRPUA=13.89, TAU_Q=-25.0, COLOR='ORANGE' /
+    ! HRRPUA 13.89 kW/m2 x 12.96 cm2 = 18.0 W per candle
+    ! (target cup area 10.8 cm2 = 37 mm circle; grid-snapped square = 12.96 cm2)
+
+    ! &PROP ID='TCbead', EMISSIVITY=0.85, DIAMETER=0.001 /  ! for the optional _bead DEVCs; FDS >= ~6.7.4
+
+    ! ============================================================
+    !  WALLS  --  10 mm cast PMMA, EXPOSED backing (loses to lab air at TMPA)
+    !  (the "how much of the late T3 climb is the wall model" axis -- see
+    !   VALIDATION_FINDINGS; default 'pmma' is the P03/P04/P05 baseline)
+    ! ============================================================
+    &MATL ID='PMMA', CONDUCTIVITY=0.19, SPECIFIC_HEAT=1.47, DENSITY=1180.0, EMISSIVITY=0.90 /
+    &SURF ID='ACRYLIC_WALL', MATL_ID='PMMA', THICKNESS=0.010, BACKING='EXPOSED',
+      COLOR='SKY BLUE', TRANSPARENCY=0.2 /
+
+    ! ---- SEALED outer box: every domain face is closed acrylic (user correction) ----
+    &VENT MB='XMIN', SURF_ID='ACRYLIC_WALL' /
+    &VENT MB='XMAX', SURF_ID='ACRYLIC_WALL' /
+    &VENT MB='YMIN', SURF_ID='ACRYLIC_WALL' /
+    &VENT MB='YMAX', SURF_ID='ACRYLIC_WALL' /
+    &VENT MB='ZMIN', SURF_ID='ACRYLIC_WALL' /
+    &VENT MB='ZMAX', SURF_ID='ACRYLIC_WALL' /
+
+    ! ============================================================
+    !  ROOM  --  0-0.70 x, full depth, 0-0.23 z; 10 mm acrylic walls
+    !  (room spans the full box depth, so its side walls ARE the box side walls;
+    !   its back wall IS the box XMIN face -- only ceiling + doorway wall are OBSTs)
+    ! ============================================================
+    &OBST XB=0.000,0.710, 0.000,0.300, 0.230,0.240, SURF_ID='ACRYLIC_WALL', TRANSPARENCY=0.2 / room ceiling
+    &OBST XB=0.700,0.710, 0.000,0.300, 0.000,0.230, SURF_ID='ACRYLIC_WALL', TRANSPARENCY=0.2 / doorway wall
+    &HOLE XB=0.694,0.716, 0.125,0.175, -0.001,0.150 / doorway 0.05 w x 0.15 h, depth-centred
+
+    ! ============================================================
+    !  FIRE
+    ! ============================================================
+    &OBST XB=0.0720,0.1080,0.1320,0.1680,0.0000,0.0060, SURF_ID='INERT', COLOR='GRAY' / candle 1 cup rim
+&VENT XB=0.0720,0.1080,0.1320,0.1680,0.0060,0.0060, SURF_ID='CANDLE_FLAME', COLOR='RED' / candle 1 burner top (13.0 cm2, z=6 mm)
+
+    ! ============================================================
+    !  DEVICES  --  7 experimental TCs: modelled bead ('T1'..) + gas temp ('T1_gas'..)
+    !  Names match the experiment 1:1 for P05 pairing.
+    ! ============================================================
+    &DEVC ID='T1',      XYZ=0.120,0.150,0.050, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T1_bead', XYZ=0.120,0.150,0.050, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T2',      XYZ=0.120,0.150,0.160, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T2_bead', XYZ=0.120,0.150,0.160, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T3',      XYZ=0.120,0.150,0.225, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T3_bead', XYZ=0.120,0.150,0.225, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T5',      XYZ=0.350,0.150,0.225, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T5_bead', XYZ=0.350,0.150,0.225, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T9',      XYZ=0.700,0.150,0.015, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T9_bead', XYZ=0.700,0.150,0.015, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T10',      XYZ=0.700,0.150,0.075, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T10_bead', XYZ=0.700,0.150,0.075, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+&DEVC ID='T11',      XYZ=0.700,0.150,0.140, QUANTITY='TEMPERATURE' /
+! &DEVC ID='T11_bead', XYZ=0.700,0.150,0.140, QUANTITY='THERMOCOUPLE', PROP_ID='TCbead' /
+
+&DEVC ID='rk_x075_z020', XYZ=0.075,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x075_z035', XYZ=0.075,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x075_z050', XYZ=0.075,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x075_z070', XYZ=0.075,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x075_z100', XYZ=0.075,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x090_z020', XYZ=0.090,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x090_z035', XYZ=0.090,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x090_z050', XYZ=0.090,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x090_z070', XYZ=0.090,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x090_z100', XYZ=0.090,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x105_z020', XYZ=0.105,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x105_z035', XYZ=0.105,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x105_z050', XYZ=0.105,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x105_z070', XYZ=0.105,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x105_z100', XYZ=0.105,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x120_z020', XYZ=0.120,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x120_z035', XYZ=0.120,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x120_z050', XYZ=0.120,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x120_z070', XYZ=0.120,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x120_z100', XYZ=0.120,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x135_z020', XYZ=0.135,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x135_z035', XYZ=0.135,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x135_z050', XYZ=0.135,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x135_z070', XYZ=0.135,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x135_z100', XYZ=0.135,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x150_z020', XYZ=0.150,0.150,0.020, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x150_z035', XYZ=0.150,0.150,0.035, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x150_z050', XYZ=0.150,0.150,0.050, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x150_z070', XYZ=0.150,0.150,0.070, QUANTITY='TEMPERATURE' /
+&DEVC ID='rk_x150_z100', XYZ=0.150,0.150,0.100, QUANTITY='TEMPERATURE' /
+&DEVC ID='Tmax_core', QUANTITY='TEMPERATURE', SPATIAL_STATISTIC='MAX', XB=0.000,0.172,0.098,0.203,0.000,0.240 /
+&DEVC ID='Tmax_T1cell', QUANTITY='TEMPERATURE', SPATIAL_STATISTIC='MAX', XB=0.09,0.15,0.14,0.16,0.03,0.07 /  ! peak T in the T1 neighbourhood
+    &DEVC ID='HRR', QUANTITY='HRR', SPATIAL_STATISTIC='VOLUME INTEGRAL', XB=0.00,1.00,0.00,0.30,0.00,0.50 /
+    &DEVC ID='O2_room', QUANTITY='VOLUME FRACTION', SPEC_ID='OXYGEN', XYZ=0.35,0.15,0.115 /
+    &DEVC ID='p_box',  QUANTITY='PRESSURE', XYZ=0.50,0.15,0.40 /
+
+    ! ---- smoke / two-layer structure (M2): thermally-defined interface height +
+    !      layer temperatures at 3 x-stations (over fire / mid-room / near door) ----
+
+
+
+    ! ============================================================
+    !  OUTPUT  --  lean: centre-plane temperature + velocity, wall temp
+    !  (fine runs add HRRPUV + a plane through the column probes -- see below)
+    ! ============================================================
+    &SLCF PBY=0.15, QUANTITY='TEMPERATURE', CELL_CENTERED=.TRUE. /
+    &SLCF PBY=0.15, QUANTITY='VELOCITY', VECTOR=.TRUE. /
+
+
+    &SLCF PBY=0.15, QUANTITY='HRRPUV', CELL_CENTERED=.TRUE. /
+    &SLCF PBX=0.12, QUANTITY='TEMPERATURE', CELL_CENTERED=.TRUE. /  ! plane through the column probes
+    &BNDF QUANTITY='WALL TEMPERATURE' /
+
+    &TAIL /
