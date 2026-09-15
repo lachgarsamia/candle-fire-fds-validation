@@ -224,6 +224,18 @@ CLUSTER_CUTS = {
     "core":  {"x": [], "y": [], "z": [0.036, 0.072, 0.114, 0.156, 0.198]},  # 6 horizontal slabs
 }
 
+# Opt-in (--split-outer): the outer mesh is usually the real per-rank bottleneck
+# (it can be BIGGER than any single core slab -- checked directly on nest10/
+# nest075: 2.34M/5.58M cells on that one rank vs ~0.65-1.6M per core slab).
+# Every cut sits outside the core's footprint (x>0.168, y<0.096 or y>0.200,
+# z>0.24) so the core is NOT further split -- same 6 slabs as the unmodified
+# CLUSTER_CUTS["core"] above, not the fixed 4:1-nest 2-mesh precedent.
+OUTER_SPLIT_CUTS = {
+    "x": [0.20, 0.32, 0.44, 0.56, 0.68, 0.80, 0.92],   # 8 x-pieces
+    "y": [0.25],                                        # 2 y-pieces
+    "z": [0.30, 0.40],                                  # 3 z-pieces
+}
+
 
 def _grid_snap(v, g):
     return round(round(v / g) * g, 6)
@@ -375,7 +387,7 @@ def _uniform_mult(dx, nx, ny, nz):
 
 
 def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=None,
-               outer_dx=None, bg_mult_xyz=None):
+               outer_dx=None, bg_mult_xyz=None, outer_cuts=None):
     """&MESH line(s): uniform single mesh unless fine_dx is given, else a
     2-level nest core(fine_dx) inside outer(4*fine_dx, or an explicit outer_dx).
     cluster=True splits both levels on the shared hierarchical CLUSTER_CUTS (one
@@ -430,11 +442,14 @@ def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=N
             f"XB={core_xb[0]:.4f},{core_xb[1]:.4f},{core_xb[2]:.4f},{core_xb[3]:.4f},{core_xb[4]:.4f},{core_xb[5]:.4f} / core dx={fine_dx*1000:.2f}mm candle+column+plume core",
         ]
 
+    cuts_by_level = dict(CLUSTER_CUTS)
+    if outer_cuts:
+        cuts_by_level = {**cuts_by_level, "outer": outer_cuts}
     acc = {ax: set() for ax in "xyz"}
     lines, counts = [], {}
     for nm, xb_, d_ in [("outer", dbig, outer_dx), ("core", core_xb, fine_dx)]:
         for ax in "xyz":
-            acc[ax] |= {_grid_snap(c, outer_dx) for c in CLUSTER_CUTS[nm][ax]}
+            acc[ax] |= {_grid_snap(c, outer_dx) for c in cuts_by_level[nm][ax]}
         sub, _ = _mesh_grid(nm, xb_, d_, {ax: sorted(acc[ax]) for ax in "xyz"}, len(lines))
         counts[nm] = len(sub)
         lines += sub
@@ -447,7 +462,7 @@ def mesh_block(dx, fine_dx, cluster=False, split_z=1, split_xyz=None, mult_xyz=N
 def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False, split_z=1,
          hrr_w=HRR_W, rad_fraction=RAD_FRACTION, soot_yield=SOOT_YIELD, dhc=DHC_KJKG,
          tmpa=TMPA, wall="pmma", smoke=True, split_xyz=None, tracer=False, mult_xyz=None,
-         dt_restart=None, outer_dx=None, bg_mult_xyz=None):
+         dt_restart=None, outer_dx=None, bg_mult_xyz=None, outer_cuts=None):
     x0, x1, y0, y1, z0, z1 = DOMAIN
     near_dx = fine_dx or dx
     Ds = dstar(hrr_w * (1 if n_candles == 1 else n_candles), tmpa)
@@ -544,7 +559,7 @@ def deck(dx, fine_dx, t_end, chid, n_candles, cluster=False, discriminate=False,
                           "XB=0.09,0.15,0.14,0.16,0.03,0.07 /  ! peak T in the T1 neighbourhood")
 
     meshes = os.linesep.join(mesh_block(dx, fine_dx, cluster, split_z, split_xyz, mult_xyz,
-                                          outer_dx, bg_mult_xyz))
+                                          outer_dx, bg_mult_xyz, outer_cuts))
     candle_obst = os.linesep.join(candles)
     tcs = os.linesep.join(tc_lines + ([""] + disc_lines if disc_lines else []))
     disc_slcf = ("&SLCF PBY=0.15, QUANTITY='HRRPUV', CELL_CENTERED=.TRUE. /\n"
@@ -716,6 +731,10 @@ def main():
     ap.add_argument("--outer-dx", type=float, default=None,
                     help="nested mesh only: explicit background cell size (m), decoupled "
                          "from the default 4*fine_dx ratio (Task 2 background-variation study)")
+    ap.add_argument("--split-outer", action="store_true",
+                    help="cluster nest only: split the outer mesh too (it's normally 1 "
+                         "undivided rank, often the real bottleneck vs the 6-slab core -- "
+                         "cuts positioned outside the core footprint so the core is untouched)")
     ap.add_argument("--bg-mult", default=None, metavar="NX,NY,NZ",
                     help="nested mesh only: MULT-tile the background at --outer-dx (or "
                          "4*fine_dx) into NX*NY*NZ blocks, with the fixed 6-z-slab core "
@@ -747,11 +766,12 @@ def main():
     sxyz = tuple(int(v) for v in a.split.split(",")) if a.split else None
     mxyz = tuple(int(v) for v in a.mult.split(",")) if a.mult else None
     bgxyz = tuple(int(v) for v in a.bg_mult.split(",")) if a.bg_mult else None
+    ocuts = OUTER_SPLIT_CUTS if a.split_outer else None
     txt = deck(a.dx, a.fine_dx, a.t_end, a.chid, a.n_candles, a.cluster, disc, a.split_z,
                hrr_w=a.hrr_w, rad_fraction=a.rad_fraction, soot_yield=a.soot_yield,
                dhc=a.dhc, tmpa=a.tmpa, wall=a.wall, smoke=not a.no_smoke, split_xyz=sxyz,
                tracer=a.tracer, mult_xyz=mxyz, dt_restart=a.dt_restart,
-               outer_dx=a.outer_dx, bg_mult_xyz=bgxyz)
+               outer_dx=a.outer_dx, bg_mult_xyz=bgxyz, outer_cuts=ocuts)
     path = os.path.join(a.out, f"{a.chid}.fds")
     with open(path, "w") as f:
         f.write(txt)
